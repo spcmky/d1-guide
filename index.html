@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Diablo I — Companion Codex</title>
-<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;900&family=Crimson+Text:ital,wght@0,400;0,600;1,400&family=MedievalSharp&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Cinzel:wght@400;600;700;900&family=Crimson+Text:ital,wght@0,400;0,600;1,400&family=MedievalSharp&display=swap" rel="stylesheet">
 <style>
 :root {
   --bg-deep: #0a0705;
@@ -820,9 +820,261 @@ html, body {
 }
 .cb-comp-label { color: var(--text-dim); }
 .cb-comp-val { color: var(--text-bright); font-weight: 600; }
+
+/* ─── Splash Screen ─── */
+#splash {
+  position: fixed; inset: 0;
+  z-index: 9999;
+  background: radial-gradient(ellipse at center bottom, #1a0a00 0%, #0a0400 40%, #000 70%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  overflow: hidden;
+  transition: opacity 0.8s ease;
+}
+#splash::before {
+  content: '';
+  position: absolute;
+  bottom: -20%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 120%;
+  height: 60%;
+  background: radial-gradient(ellipse at center, rgba(200,80,0,0.15) 0%, transparent 70%);
+  animation: hellglow 4s ease-in-out infinite;
+}
+@keyframes hellglow {
+  0%, 100% { opacity: 0.5; transform: translateX(-50%) scale(1); }
+  50% { opacity: 1; transform: translateX(-50%) scale(1.1); }
+}
+.splash-title {
+  font-family: 'Cinzel Decorative', 'Cinzel', serif;
+  font-size: clamp(60px, 12vw, 150px);
+  font-weight: 900;
+  letter-spacing: 12px;
+  text-transform: uppercase;
+  color: #c9a84c;
+  text-shadow:
+    0 0 20px rgba(200,120,0,0.8),
+    0 0 40px rgba(200,80,0,0.6),
+    0 0 80px rgba(200,50,0,0.4),
+    0 0 120px rgba(180,40,0,0.3),
+    0 4px 10px rgba(0,0,0,0.9);
+  animation: firetext 3s ease-in-out infinite;
+  position: relative;
+  z-index: 1;
+  line-height: 1;
+}
+@keyframes firetext {
+  0%, 100% { text-shadow: 0 0 20px rgba(200,120,0,0.8), 0 0 40px rgba(200,80,0,0.6), 0 0 80px rgba(200,50,0,0.4), 0 0 120px rgba(180,40,0,0.3), 0 4px 10px rgba(0,0,0,0.9); }
+  50% { text-shadow: 0 0 30px rgba(230,140,0,1), 0 0 60px rgba(220,100,0,0.8), 0 0 100px rgba(200,60,0,0.5), 0 0 150px rgba(180,40,0,0.4), 0 4px 10px rgba(0,0,0,0.9); }
+}
+.splash-subtitle {
+  font-family: 'MedievalSharp', cursive;
+  font-size: clamp(14px, 3vw, 24px);
+  color: #6b4c1e;
+  letter-spacing: 8px;
+  margin-top: 12px;
+  position: relative;
+  z-index: 1;
+}
+.splash-image {
+  width: clamp(120px, 25vw, 280px);
+  margin-bottom: 24px;
+  position: relative;
+  z-index: 1;
+  opacity: 0.9;
+  filter: drop-shadow(0 0 40px rgba(200,80,0,0.6));
+}
+.splash-enter {
+  margin-top: 50px;
+  font-family: 'Cinzel', serif;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 5px;
+  text-transform: uppercase;
+  color: #6b4c1e;
+  border: 1px solid #3d3222;
+  background: transparent;
+  padding: 14px 40px;
+  cursor: pointer;
+  transition: all 0.3s;
+  position: relative;
+  z-index: 1;
+}
+.splash-enter:hover {
+  color: #c9a84c;
+  border-color: #c9a84c;
+  box-shadow: 0 0 30px rgba(200,120,0,0.3);
+  background: rgba(200,120,0,0.05);
+}
+.splash-hint {
+  position: absolute;
+  bottom: 24px;
+  font-family: 'Crimson Text', serif;
+  font-size: 12px;
+  color: #3d3222;
+  letter-spacing: 3px;
+  animation: pulse 2s ease-in-out infinite;
+}
+@keyframes pulse {
+  0%, 100% { opacity: 0.4; }
+  50% { opacity: 1; }
+}
+.ember {
+  position: absolute;
+  width: 3px;
+  height: 3px;
+  background: #e86420;
+  border-radius: 50%;
+  opacity: 0;
+  animation: rise linear infinite;
+  pointer-events: none;
+}
+@keyframes rise {
+  0% { transform: translateY(0) scale(1); opacity: 0; }
+  10% { opacity: 0.7; }
+  90% { opacity: 0.2; }
+  100% { transform: translateY(-100vh) scale(0); opacity: 0; }
+}
+.splash-version {
+  position: absolute;
+  bottom: 50px;
+  font-family: 'Crimson Text', serif;
+  font-size: 11px;
+  color: #2a231a;
+  letter-spacing: 2px;
+  z-index: 1;
+}
+
+/* ─── Monster/Item Image Styling ─── */
+.monster-img-cell { width: 56px; min-width: 56px; padding: 4px !important; }
+.monster-img {
+  width: 48px; height: 48px;
+  object-fit: contain;
+  image-rendering: pixelated;
+  filter: drop-shadow(0 0 4px rgba(200,120,0,0.4));
+}
+.item-img {
+  width: 36px; height: 36px;
+  object-fit: contain;
+  image-rendering: pixelated;
+  filter: drop-shadow(0 0 3px rgba(200,160,60,0.5));
+  vertical-align: middle;
+  margin-right: 8px;
+}
+.spell-img {
+  width: 40px; height: 40px;
+  object-fit: contain;
+  image-rendering: pixelated;
+  filter: drop-shadow(0 0 6px rgba(123,104,238,0.5));
+  margin-bottom: 6px;
+}
+.class-portrait {
+  width: 100%; max-width: 200px;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  margin-bottom: 12px;
+  image-rendering: pixelated;
+}
+.img-placeholder {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  font-size: 20px;
+  color: var(--text-dim);
+}
+.img-placeholder.monster { width: 48px; height: 48px; }
+.img-placeholder.item { width: 36px; height: 36px; display: inline-flex; vertical-align: middle; margin-right: 8px; }
+.img-placeholder.spell { width: 40px; height: 40px; margin-bottom: 6px; }
+
+/* ─── Multiplayer Section ─── */
+.mode-compare {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin: 16px 0;
+}
+.mode-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 16px;
+}
+.mode-card h3 {
+  font-family: 'Cinzel', serif;
+  color: var(--gold);
+  font-size: 16px;
+  margin-bottom: 10px;
+}
+.mode-card ul {
+  list-style: none;
+  padding: 0;
+}
+.mode-card li {
+  padding: 4px 0;
+  font-size: 14px;
+  border-bottom: 1px solid rgba(61,50,34,0.3);
+}
+.mode-card li:last-child { border-bottom: none; }
+.mode-card li::before {
+  content: '>';
+  color: var(--gold-dim);
+  margin-right: 8px;
+  font-family: monospace;
+}
+.devilution-banner {
+  background: linear-gradient(135deg, #1a1206 0%, #201b15 100%);
+  border: 1px solid var(--border-glow);
+  border-radius: 6px;
+  padding: 20px;
+  margin-top: 20px;
+}
+.devilution-banner h3 {
+  font-family: 'Cinzel', serif;
+  color: var(--gold-bright);
+  font-size: 18px;
+  margin-bottom: 12px;
+}
+.dx-features {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 10px;
+}
+.dx-feature {
+  background: var(--bg-panel);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 10px 12px;
+  font-size: 13px;
+}
+.dx-feature strong {
+  color: var(--gold);
+  display: block;
+  font-size: 12px;
+  margin-bottom: 2px;
+}
+@media (max-width: 700px) {
+  .mode-compare { grid-template-columns: 1fr; }
+}
 </style>
 </head>
 <body>
+<!-- Splash Screen -->
+<div id="splash" onclick="enterCodex()">
+  <img class="splash-image" src="images/diablo-lord.gif" alt="Diablo" onerror="this.style.display='none'">
+  <div class="splash-title">Diablo</div>
+  <div class="splash-subtitle">Companion Codex</div>
+  <button class="splash-enter" onclick="event.stopPropagation();enterCodex()">Enter the Labyrinth</button>
+  <div class="splash-hint">click anywhere to enter</div>
+  <div class="splash-version">Est. 1996 — Blizzard North</div>
+</div>
+
 <div id="app">
 <!-- Sidebar -->
 <div class="sidebar">
@@ -848,6 +1100,31 @@ html, body {
 //  DIABLO I COMPANION CODEX — Complete Game Database
 // ═══════════════════════════════════════════════════
 
+// ─── SPLASH SCREEN ───
+function enterCodex() {
+  const splash = document.getElementById('splash');
+  splash.style.opacity = '0';
+  setTimeout(() => splash.style.display = 'none', 800);
+}
+// Create floating embers
+(function() {
+  const splash = document.getElementById('splash');
+  if (!splash) return;
+  for (let i = 0; i < 80; i++) {
+    const ember = document.createElement('div');
+    ember.className = 'ember';
+    ember.style.left = Math.random() * 100 + '%';
+    ember.style.bottom = '-10px';
+    ember.style.animationDuration = (3 + Math.random() * 5) + 's';
+    ember.style.animationDelay = Math.random() * 6 + 's';
+    const size = (2 + Math.random() * 3) + 'px';
+    ember.style.width = size;
+    ember.style.height = size;
+    ember.style.background = Math.random() > 0.5 ? '#e86420' : '#c9a84c';
+    splash.appendChild(ember);
+  }
+})();
+
 const NAV = [
   { section: 'Tools' },
   { id: 'charbuilder', label: 'Character Builder', icon: '🧙' },
@@ -868,6 +1145,8 @@ const NAV = [
   { id: 'strategies', label: 'Scenario Strategies', icon: '🗡️' },
   { id: 'resistances', label: 'Resists & Immunities', icon: '🔥' },
   { id: 'tips', label: 'Tips & Tricks', icon: '💡' },
+  { section: 'Modes' },
+  { id: 'multiplayer', label: 'Single vs Multi', icon: '👥' },
 ];
 
 // ─── DATA ───
@@ -949,26 +1228,26 @@ const DUNGEON_LEVELS = [
 ];
 
 const MONSTERS = [
-  { name: 'Zombie', area: 'Church 1-3', hp: '6-18', ac: '5-15', dmg: '2-6', xp: '54-108', resist: 'None', immune: 'None', type: 'Undead', tips: 'Slow and predictable. Attack and back away.' },
-  { name: 'Fallen One', area: 'Church 1-3', hp: '4-12', ac: '10-20', dmg: '1-4', xp: '46-80', resist: 'None', immune: 'None', type: 'Animal', tips: 'Kill the Shaman first — others flee when he dies and he can resurrect them.' },
-  { name: 'Skeleton', area: 'Church 1-4', hp: '8-20', ac: '15-25', dmg: '2-8', xp: '64-120', resist: 'None', immune: 'Magic', type: 'Undead', tips: 'Immune to Magic damage type. Use fire, lightning, or physical.' },
-  { name: 'Skeleton Archer', area: 'Church 2-4', hp: '6-14', ac: '20-30', dmg: '2-8', xp: '72-140', resist: 'None', immune: 'Magic', type: 'Undead', tips: 'Same immunities as Skeletons. Close distance quickly or use fire.' },
-  { name: 'Scavenger', area: 'Church 1-3', hp: '5-15', ac: '10-18', dmg: '1-6', xp: '60-100', resist: 'None', immune: 'None', type: 'Animal', tips: 'Fast but fragile. Will flee at low HP.' },
-  { name: 'The Butcher', area: 'Church 2 (Quest)', hp: '110', ac: '25', dmg: '6-12', xp: '440', resist: 'None', immune: 'None', type: 'Demon', tips: 'Famous "Ahh, fresh meat!" — lure him into a doorway to fight safely. Or use fire from behind grating.' },
-  { name: 'Skeleton King', area: 'Church 3 (Quest)', hp: '240', ac: '35', dmg: '6-16', xp: '1360', resist: 'Fire, Lightning', immune: 'Magic', type: 'Undead', tips: 'Summons skeletons. Focus him down and ignore adds. Holy Bolt is very effective.' },
-  { name: 'Goat Man', area: 'Catacombs 5-7', hp: '24-50', ac: '25-40', dmg: '4-12', xp: '180-340', resist: 'None', immune: 'None', type: 'Demon', tips: 'Come in melee and ranged variants. Kill archers first.' },
-  { name: 'Acid Beast', area: 'Catacombs 5-7', hp: '20-40', ac: '20-30', dmg: '2-14', xp: '156-260', resist: 'None', immune: 'None', type: 'Animal', tips: 'Spit acid at range. Close distance to stop them from spitting.' },
-  { name: 'Hidden', area: 'Catacombs 5-8', hp: '30-60', ac: '30-45', dmg: '6-14', xp: '240-420', resist: 'None', immune: 'None', type: 'Demon', tips: 'Invisible until attacking. Listen for footsteps. Can be revealed with Infravision.' },
-  { name: 'Lightning Demon', area: 'Catacombs 6-8', hp: '40-70', ac: '35-50', dmg: '1-10 + Lightning', xp: '300-500', resist: 'Lightning', immune: 'None', type: 'Demon', tips: 'Lightning trails behind them. Don\'t chase — let them come to you.' },
-  { name: 'Succubus', area: 'Caves 9-12', hp: '60-120', ac: '40-60', dmg: '1-16 (Blood Star)', xp: '700-1200', resist: 'Magic', immune: 'None', type: 'Demon', tips: 'Cast Blood Star which homes in. Extremely dangerous in groups. Priority kill target. Use Stone Curse.' },
-  { name: 'Balrog', area: 'Caves 10-12', hp: '80-160', ac: '50-70', dmg: '10-20', xp: '1000-1600', resist: 'Fire', immune: 'None', type: 'Demon', tips: 'Large, powerful melee fighters. Resist Fire. Use Lightning or physical.' },
-  { name: 'Magma Demon', area: 'Caves 9-11', hp: '50-100', ac: '35-55', dmg: '6-16 (Inferno)', xp: '600-1000', resist: 'Fire', immune: 'Magic', type: 'Demon', tips: 'Breathe Inferno. Immune to Magic, resist Fire. Use Lightning or physical attacks.' },
-  { name: 'Viper', area: 'Caves 9-12', hp: '60-110', ac: '45-60', dmg: '1-18 + Charge', xp: '700-1100', resist: 'Magic', immune: 'None', type: 'Demon', tips: 'Charge attack has unusual hit detection. Stone Curse is very effective.' },
-  { name: 'Blood Knight', area: 'Hell 13-16', hp: '120-200', ac: '60-80', dmg: '15-30', xp: '1800-2800', resist: 'Fire, Lightning', immune: 'Magic', type: 'Demon', tips: 'Fast, hard-hitting melee. Resist Fire and Lightning. Use physical damage or Stone Curse.' },
-  { name: 'Soul Burner', area: 'Hell 13-15', hp: '80-140', ac: '50-65', dmg: '10-20', xp: '1200-2000', resist: 'Fire', immune: 'Lightning', type: 'Undead', tips: 'Immune to Lightning. Use Fire or physical attacks.' },
-  { name: 'Advocate', area: 'Hell 14-16', hp: '100-180', ac: '55-70', dmg: '1-20 (spells)', xp: '1600-2600', resist: 'Magic, Fire', immune: 'Lightning', type: 'Demon', tips: 'Dangerous casters. Immune to Lightning, resist Magic and Fire. Rush them down with melee.' },
-  { name: 'Steel Lord', area: 'Hell 15-16', hp: '150-240', ac: '70-85', dmg: '12-28', xp: '2400-3600', resist: 'Fire, Lightning, Magic', immune: 'None', type: 'Demon', tips: 'Triple resist but no immunities. Very tanky. Physical damage is most reliable.' },
-  { name: 'Diablo', area: 'Hell 16 (Boss)', hp: '1666', ac: '90', dmg: '30-60 + Apocalypse', xp: '30666', resist: 'Fire, Lightning, Magic', immune: 'None', type: 'Demon', tips: 'Final boss. Triple resist but no immunities. Stone Curse + melee is safest. Mana Shield for Sorcerers. Bring Full Rejuvenation potions.' },
+  { name: 'Zombie', area: 'Church 1-3', hp: '6-18', ac: '5-15', dmg: '2-6', xp: '54-108', resist: 'None', immune: 'None', type: 'Undead', img: 'images/monsters/zombie.png', tips: 'Slow and predictable. Attack and back away.' },
+  { name: 'Fallen One', area: 'Church 1-3', hp: '4-12', ac: '10-20', dmg: '1-4', xp: '46-80', resist: 'None', immune: 'None', type: 'Animal', img: 'images/monsters/fallen-one.png', tips: 'Kill the Shaman first — others flee when he dies and he can resurrect them.' },
+  { name: 'Skeleton', area: 'Church 1-4', hp: '8-20', ac: '15-25', dmg: '2-8', xp: '64-120', resist: 'None', immune: 'Magic', type: 'Undead', img: 'images/monsters/skeleton.png', tips: 'Immune to Magic damage type. Use fire, lightning, or physical.' },
+  { name: 'Skeleton Archer', area: 'Church 2-4', hp: '6-14', ac: '20-30', dmg: '2-8', xp: '72-140', resist: 'None', immune: 'Magic', type: 'Undead', img: 'images/monsters/skeleton-archer.png', tips: 'Same immunities as Skeletons. Close distance quickly or use fire.' },
+  { name: 'Scavenger', area: 'Church 1-3', hp: '5-15', ac: '10-18', dmg: '1-6', xp: '60-100', resist: 'None', immune: 'None', type: 'Animal', img: 'images/monsters/scavenger.png', tips: 'Fast but fragile. Will flee at low HP.' },
+  { name: 'The Butcher', area: 'Church 2 (Quest)', hp: '110', ac: '25', dmg: '6-12', xp: '440', resist: 'None', immune: 'None', type: 'Demon', img: 'images/monsters/butcher.png', tips: 'Famous "Ahh, fresh meat!" — lure him into a doorway to fight safely. Or use fire from behind grating.' },
+  { name: 'Skeleton King', area: 'Church 3 (Quest)', hp: '240', ac: '35', dmg: '6-16', xp: '1360', resist: 'Fire, Lightning', immune: 'Magic', type: 'Undead', img: 'images/monsters/skeleton-king.png', tips: 'Summons skeletons. Focus him down and ignore adds. Holy Bolt is very effective.' },
+  { name: 'Goat Man', area: 'Catacombs 5-7', hp: '24-50', ac: '25-40', dmg: '4-12', xp: '180-340', resist: 'None', immune: 'None', type: 'Demon', img: 'images/monsters/goat-man.png', tips: 'Come in melee and ranged variants. Kill archers first.' },
+  { name: 'Acid Beast', area: 'Catacombs 5-7', hp: '20-40', ac: '20-30', dmg: '2-14', xp: '156-260', resist: 'None', immune: 'None', type: 'Animal', img: 'images/monsters/acid-beast.png', tips: 'Spit acid at range. Close distance to stop them from spitting.' },
+  { name: 'Hidden', area: 'Catacombs 5-8', hp: '30-60', ac: '30-45', dmg: '6-14', xp: '240-420', resist: 'None', immune: 'None', type: 'Demon', img: 'images/monsters/hidden.png', tips: 'Invisible until attacking. Listen for footsteps. Can be revealed with Infravision.' },
+  { name: 'Lightning Demon', area: 'Catacombs 6-8', hp: '40-70', ac: '35-50', dmg: '1-10 + Lightning', xp: '300-500', resist: 'Lightning', immune: 'None', type: 'Demon', img: 'images/monsters/lightning-demon.png', tips: 'Lightning trails behind them. Don\'t chase — let them come to you.' },
+  { name: 'Succubus', area: 'Caves 9-12', hp: '60-120', ac: '40-60', dmg: '1-16 (Blood Star)', xp: '700-1200', resist: 'Magic', immune: 'None', type: 'Demon', img: 'images/monsters/succubus.png', tips: 'Cast Blood Star which homes in. Extremely dangerous in groups. Priority kill target. Use Stone Curse.' },
+  { name: 'Balrog', area: 'Caves 10-12', hp: '80-160', ac: '50-70', dmg: '10-20', xp: '1000-1600', resist: 'Fire', immune: 'None', type: 'Demon', img: 'images/monsters/balrog.png', tips: 'Large, powerful melee fighters. Resist Fire. Use Lightning or physical.' },
+  { name: 'Magma Demon', area: 'Caves 9-11', hp: '50-100', ac: '35-55', dmg: '6-16 (Inferno)', xp: '600-1000', resist: 'Fire', immune: 'Magic', type: 'Demon', img: 'images/monsters/magma-demon.png', tips: 'Breathe Inferno. Immune to Magic, resist Fire. Use Lightning or physical attacks.' },
+  { name: 'Viper', area: 'Caves 9-12', hp: '60-110', ac: '45-60', dmg: '1-18 + Charge', xp: '700-1100', resist: 'Magic', immune: 'None', type: 'Demon', img: 'images/monsters/viper.png', tips: 'Charge attack has unusual hit detection. Stone Curse is very effective.' },
+  { name: 'Blood Knight', area: 'Hell 13-16', hp: '120-200', ac: '60-80', dmg: '15-30', xp: '1800-2800', resist: 'Fire, Lightning', immune: 'Magic', type: 'Demon', img: 'images/monsters/blood-knight.png', tips: 'Fast, hard-hitting melee. Resist Fire and Lightning. Use physical damage or Stone Curse.' },
+  { name: 'Soul Burner', area: 'Hell 13-15', hp: '80-140', ac: '50-65', dmg: '10-20', xp: '1200-2000', resist: 'Fire', immune: 'Lightning', type: 'Undead', img: 'images/monsters/soul-burner.png', tips: 'Immune to Lightning. Use Fire or physical attacks.' },
+  { name: 'Advocate', area: 'Hell 14-16', hp: '100-180', ac: '55-70', dmg: '1-20 (spells)', xp: '1600-2600', resist: 'Magic, Fire', immune: 'Lightning', type: 'Demon', img: 'images/monsters/advocate.png', tips: 'Dangerous casters. Immune to Lightning, resist Magic and Fire. Rush them down with melee.' },
+  { name: 'Steel Lord', area: 'Hell 15-16', hp: '150-240', ac: '70-85', dmg: '12-28', xp: '2400-3600', resist: 'Fire, Lightning, Magic', immune: 'None', type: 'Demon', img: 'images/monsters/steel-lord.png', tips: 'Triple resist but no immunities. Very tanky. Physical damage is most reliable.' },
+  { name: 'Diablo', area: 'Hell 16 (Boss)', hp: '1666', ac: '90', dmg: '30-60 + Apocalypse', xp: '30666', resist: 'Fire, Lightning, Magic', immune: 'None', type: 'Demon', img: 'images/monsters/diablo.png', tips: 'Final boss. Triple resist but no immunities. Stone Curse + melee is safest. Mana Shield for Sorcerers. Bring Full Rejuvenation potions.' },
 ];
 
 const UNIQUE_ITEMS = [
@@ -1224,6 +1503,73 @@ const TIPS = [
   ]},
 ];
 
+const MULTIPLAYER_GUIDE = {
+  overview: 'Diablo I plays very differently in single player vs multiplayer. Understanding the differences is key to getting the most out of each mode.',
+  singlePlayer: {
+    title: 'Single Player',
+    features: [
+      'Character save stored locally — you can back up your save file',
+      'Game is pausable (press Escape or open inventory)',
+      'Dungeon layouts are randomized each new game',
+      'All quests available in the quest pool (randomly selected per game)',
+      'Game difficulty scales to your character level',
+      'You can save and quit at any time — resume exactly where you left off',
+      'No risk of hostile players or griefing',
+      'Speed is unaffected by network latency',
+      'Some unique items are single-player only (e.g., map generation differences)',
+      'Can use save/load to "save scum" shrines, drops, and enchants',
+    ]
+  },
+  multiPlayer: {
+    title: 'Multiplayer',
+    features: [
+      'Up to 4 players in a single game',
+      'Monster HP and damage scale with player count',
+      'PvP (player vs player) is always enabled — watch your back',
+      'Characters stored on Battle.net servers (original) or locally (TCP/IP)',
+      'Friendly Fire: spells like Fire Wall and Inferno damage other players',
+      'Certain quests are multiplayer-only (Spooky Shrine heals all others)',
+      'Town Portal can be used by other players — coordinate or betray',
+      'Item trading between players is possible (drop items on ground)',
+      'Game does NOT pause — opening inventory is risky',
+      'Dungeon layout is fixed per game seed — all players see same map',
+      'Notorious for duping exploits and hacked items in original Battle.net',
+      'Tainted Shrine and Spooky Shrine only function in multiplayer',
+    ]
+  },
+  keyDifferences: [
+    { aspect: 'Save System', sp: 'Local save file, save anytime', mp: 'Character saved on server or TCP/IP local file' },
+    { aspect: 'Pausing', sp: 'Can pause freely', mp: 'Cannot pause — game is always live' },
+    { aspect: 'Difficulty', sp: 'Scales to character level', mp: 'Scales to player count + level' },
+    { aspect: 'Quests', sp: 'Full random quest pool each game', mp: 'Reduced quest pool, some quests removed' },
+    { aspect: 'Monster HP', sp: 'Base values', mp: 'Increased with more players' },
+    { aspect: 'PvP', sp: 'Not applicable', mp: 'Always enabled, hostile at any time' },
+    { aspect: 'Town Portal', sp: 'Private — only you use it', mp: 'Shared — anyone can enter your portal' },
+    { aspect: 'Item Drops', sp: 'All drops are yours', mp: 'Drops are free-for-all, race to grab them' },
+  ],
+  devilutionX: {
+    name: 'DevilutionX',
+    desc: 'DevilutionX is a modern open-source port of Diablo I (and Hellfire expansion) that fixes bugs, adds quality-of-life features, and makes the game run on modern platforms. It is the recommended way to play Diablo I today.',
+    url: 'https://devilutionx.com',
+    features: [
+      { category: 'Platform Support', detail: 'Windows, macOS, Linux, Android, iOS, Nintendo Switch, PS4/PS Vita, Xbox, Raspberry Pi, and more' },
+      { category: 'Widescreen', detail: 'Play at any resolution including ultrawide — no more 640x480 limitation' },
+      { category: 'Controller Support', detail: 'Full gamepad/controller support with intuitive mapping' },
+      { category: 'Network Play', detail: 'TCP/IP and ZeroTier-based internet multiplayer — no Battle.net required' },
+      { category: 'Hellfire Support', detail: 'Full support for the Hellfire expansion including Monk class, new dungeons, and items' },
+      { category: 'Stash System', detail: 'Shared stash for storing items between games — a huge QoL improvement' },
+      { category: 'Run in Town', detail: 'Optional toggle to run in town instead of walking — saves time' },
+      { category: 'Auto-Pickup Gold', detail: 'Walk over gold to pick it up automatically' },
+      { category: 'XP Bar', detail: 'Visual experience bar showing progress to next level' },
+      { category: 'Monster Health Bars', detail: 'See enemy HP remaining during combat' },
+      { category: 'Bug Fixes', detail: 'Hundreds of original game bugs fixed including quest bugs, AI glitches, and crash fixes' },
+      { category: 'Multi-Language', detail: 'Translated into dozens of languages' },
+      { category: 'Improved Multiplayer', detail: 'Stable netcode, public game browser, host/join games easily over internet' },
+      { category: 'Difficulty Modes', detail: 'Nightmare and Hell difficulty accessible in single player (originally MP-only)' },
+    ]
+  }
+};
+
 // ─── RENDER ENGINE ───
 
 let currentPage = 'charbuilder';
@@ -1271,6 +1617,7 @@ function renderContent() {
     resistances: renderResistances,
     tips: renderTips,
     charbuilder: renderCharBuilder,
+    multiplayer: renderMultiplayer,
   };
 
   el.innerHTML = (renderers[currentPage] || (() => '<p>Page not found.</p>'))();
@@ -1357,9 +1704,10 @@ function renderMonsters() {
   return `
     <p style="margin-bottom:16px;color:var(--text-dim)">Showing ${filtered.length} monsters. Use the search box to filter by name, area, or type.</p>
     <table class="data-table">
-      <tr><th>Monster</th><th>Area</th><th>HP</th><th>Damage</th><th>XP</th><th>Resist</th><th>Immune</th><th>Tips</th></tr>
+      <tr><th></th><th>Monster</th><th>Area</th><th>HP</th><th>Damage</th><th>XP</th><th>Resist</th><th>Immune</th><th>Tips</th></tr>
       ${filtered.map(m => `
         <tr>
+          <td class="monster-img-cell">${m.img ? `<img class="monster-img" src="${m.img}" alt="${m.name}" onerror="this.parentElement.innerHTML='<div class=\\'img-placeholder monster\\'>${m.type === 'Undead' ? '💀' : m.type === 'Demon' ? '👹' : '🐾'}</div>'">` : `<div class="img-placeholder monster">${m.type === 'Undead' ? '💀' : m.type === 'Demon' ? '👹' : '🐾'}</div>`}</td>
           <td><strong style="color:var(--text-bright)">${m.name}</strong><br><span style="font-size:12px;color:var(--text-dim)">${m.type}</span></td>
           <td>${m.area}</td>
           <td>${m.hp}</td>
@@ -1648,6 +1996,57 @@ function renderTips() {
     <div class="section-header">${cat.category}</div>
     ${cat.tips.map(t => `<div class="tip">${t}</div>`).join('')}
   `).join('');
+}
+
+function renderMultiplayer() {
+  const mg = MULTIPLAYER_GUIDE;
+  return `
+    <div class="info-block"><p>${mg.overview}</p></div>
+
+    <div class="section-header">Single Player vs Multiplayer</div>
+    <div class="mode-compare">
+      <div class="mode-card">
+        <h3>${mg.singlePlayer.title}</h3>
+        <ul>${mg.singlePlayer.features.map(f => `<li>${f}</li>`).join('')}</ul>
+      </div>
+      <div class="mode-card">
+        <h3>${mg.multiPlayer.title}</h3>
+        <ul>${mg.multiPlayer.features.map(f => `<li>${f}</li>`).join('')}</ul>
+      </div>
+    </div>
+
+    <div class="section-header">Key Differences</div>
+    <table class="data-table">
+      <tr><th>Aspect</th><th>Single Player</th><th>Multiplayer</th></tr>
+      ${mg.keyDifferences.map(d => `
+        <tr>
+          <td><strong style="color:var(--gold)">${d.aspect}</strong></td>
+          <td>${d.sp}</td>
+          <td>${d.mp}</td>
+        </tr>
+      `).join('')}
+    </table>
+
+    <div class="section-header">Multiplayer Tips</div>
+    <div class="tip">In multiplayer, always keep a Town Portal ready. If a hostile player approaches, portal out immediately.</div>
+    <div class="tip">Never drop valuable items on the ground to "show" another player. Use the trade window or risk losing everything.</div>
+    <div class="tip">Coordinate spell usage — a Sorcerer's Fire Wall can kill party members just as easily as monsters.</div>
+    <div class="tip">PvP is always on. A "friendly" player can turn hostile at any time. Trust is earned, not given.</div>
+    <div class="warning">In the original game, Battle.net multiplayer was plagued by hacked items and dupes. If an item looks too good to be true, it probably is.</div>
+
+    <div class="devilution-banner">
+      <h3>DevilutionX — The Modern Way to Play</h3>
+      <p style="margin-bottom:14px">${mg.devilutionX.desc}</p>
+      <p style="margin-bottom:16px;font-size:13px"><strong style="color:var(--gold)">Website:</strong> <a href="${mg.devilutionX.url}" target="_blank" style="color:var(--blue-bright);text-decoration:underline">${mg.devilutionX.url}</a></p>
+      <div class="dx-features">
+        ${mg.devilutionX.features.map(f => `
+          <div class="dx-feature">
+            <strong>${f.category}</strong>
+            ${f.detail}
+          </div>
+        `).join('')}
+      </div>
+    </div>`;
 }
 
 // ─── CHARACTER BUILDER ───
