@@ -1258,42 +1258,42 @@ const MONSTERS = [
 ];
 
 const UNIQUE_ITEMS = [
-  { name: 'The Butcher\'s Cleaver', type: 'Cleaver', req: '0 Str', damage: '4-24', special: 'Unusual item damage, +10 Str', how: 'Drop from The Butcher quest', tier: 'unique' },
-  { name: 'Undead Crown', type: 'Crown', req: '0 Str', ac: '8', special: 'Life Stealing', how: 'Drop from Skeleton King quest', tier: 'unique' },
-  { name: 'Arkaine\'s Valor', type: 'Splint Mail', req: '0 Str', ac: '25', special: '+10 Vitality, Fastest hit recovery, -3 damage from enemies', how: 'Valor quest reward (Caves)', tier: 'unique' },
-  { name: 'The Grandfather', type: 'Great Sword', req: '75 Str', damage: '10-20', special: '+5 all attributes, +20 HP, One-handed, +70% To Hit', how: 'Random drop, Hell difficulty', tier: 'unique' },
-  { name: 'King\'s Sword of Haste', type: 'Sword (Prefix+Suffix)', req: 'Varies', damage: 'Varies', special: '+Damage, Fast attack speed — Best Warrior weapon', how: 'Random affix combination', tier: 'magic' },
-  { name: 'Windforce', type: 'Long War Bow', req: '70 Str', damage: '1-14', special: '+5 Str, Knocks target back', how: 'Random drop', tier: 'unique' },
-  { name: 'Naj\'s Light Plate', type: 'Plate Mail', req: '0 Str', ac: '50', special: '+5 Magic, +20 Mana, +20% Resist All, No Str requirement', how: 'Random drop, Hell difficulty', tier: 'unique' },
-  { name: 'Thinking Cap', type: 'Skull Cap', req: '0 Str', ac: '4', special: '+30 Mana, +20% Resist All, +2 spell levels', how: 'Random drop', tier: 'unique' },
-  { name: 'Dreamflange', type: 'Mace', req: '0 Str', damage: '1-8', special: '+30 Mana, +50% Resist Magic, +20% Light Radius, +1 spell levels', how: 'Random drop', tier: 'unique' },
-  { name: 'Godly Plate of the Whale', type: 'Full Plate (Prefix+Suffix)', req: 'High Str', ac: '75-85', special: 'Max AC, +100 HP — Best Warrior armor', how: 'Random affix combination (very rare)', tier: 'magic' },
-  { name: 'Obsidian Ring/Amulet of the Zodiac', type: 'Jewelry (Prefix+Suffix)', req: 'None', ac: '-', special: '+All Resists, +All Attributes — Best-in-slot jewelry', how: 'Random affix combination', tier: 'magic' },
-  { name: 'Griswold\'s Edge', type: 'Broad Sword', req: '40 Str', damage: '4-12', special: '-2 damage from enemies, +25% Fire resist, +20 Mana, Fast attack', how: 'Random drop', tier: 'unique' },
-  { name: 'Harlequin Crest', type: 'Helm', req: '0 Str', ac: '15', special: '-1 damage, +7 all attributes, +7 Mana, +7 HP', how: 'Random drop', tier: 'unique' },
+  { name: 'The Butcher\'s Cleaver', type: 'Cleaver', req: '0 Str', damage: '4-24', special: 'Unusual item damage, +10 Str', how: 'Drop from The Butcher quest', tier: 'unique', img: 'images/items/cleaver.png' },
+  { name: 'Undead Crown', type: 'Crown', req: '0 Str', ac: '8', special: 'Life Stealing', how: 'Drop from Skeleton King quest', tier: 'unique', img: 'images/items/undead-crown.png' },
+  { name: 'Arkaine\'s Valor', type: 'Splint Mail', req: '0 Str', ac: '25', special: '+10 Vitality, Fastest hit recovery, -3 damage from enemies', how: 'Valor quest reward (Caves)', tier: 'unique', img: 'images/items/splint-mail.png' },
+  { name: 'The Grandfather', type: 'Great Sword', req: '75 Str', damage: '10-20', special: '+5 all attributes, +20 HP, One-handed, +70% To Hit', how: 'Random drop, Hell difficulty', tier: 'unique', img: 'images/items/great-sword.png' },
+  { name: 'King\'s Sword of Haste', type: 'Sword (Prefix+Suffix)', req: 'Varies', damage: 'Varies', special: '+Damage, Fast attack speed — Best Warrior weapon', how: 'Random affix combination', tier: 'magic', img: 'images/items/long-sword.png' },
+  { name: 'Windforce', type: 'Long War Bow', req: '70 Str', damage: '1-14', special: '+5 Str, Knocks target back', how: 'Random drop', tier: 'unique', img: 'images/items/composite-bow.png' },
+  { name: 'Naj\'s Light Plate', type: 'Plate Mail', req: '0 Str', ac: '50', special: '+5 Magic, +20 Mana, +20% Resist All, No Str requirement', how: 'Random drop, Hell difficulty', tier: 'unique', img: 'images/items/full-plate.png' },
+  { name: 'Thinking Cap', type: 'Skull Cap', req: '0 Str', ac: '4', special: '+30 Mana, +20% Resist All, +2 spell levels', how: 'Random drop', tier: 'unique', img: 'images/items/skull-cap.png' },
+  { name: 'Dreamflange', type: 'Mace', req: '0 Str', damage: '1-8', special: '+30 Mana, +50% Resist Magic, +20% Light Radius, +1 spell levels', how: 'Random drop', tier: 'unique', img: 'images/items/morning-star.png' },
+  { name: 'Godly Plate of the Whale', type: 'Full Plate (Prefix+Suffix)', req: 'High Str', ac: '75-85', special: 'Max AC, +100 HP — Best Warrior armor', how: 'Random affix combination (very rare)', tier: 'magic', img: 'images/items/full-plate.png' },
+  { name: 'Obsidian Ring/Amulet of the Zodiac', type: 'Jewelry (Prefix+Suffix)', req: 'None', ac: '-', special: '+All Resists, +All Attributes — Best-in-slot jewelry', how: 'Random affix combination', tier: 'magic', img: 'images/items/ring.png' },
+  { name: 'Griswold\'s Edge', type: 'Broad Sword', req: '40 Str', damage: '4-12', special: '-2 damage from enemies, +25% Fire resist, +20 Mana, Fast attack', how: 'Random drop', tier: 'unique', img: 'images/items/broad-sword.png' },
+  { name: 'Harlequin Crest', type: 'Helm', req: '0 Str', ac: '15', special: '-1 damage, +7 all attributes, +7 Mana, +7 HP', how: 'Random drop', tier: 'unique', img: 'images/items/helm.png' },
 ];
 
 const SPELLS = [
-  { name: 'Firebolt', type: 'Fire', source: 'Book', minMag: 15, manaCost: '3-6', desc: 'Single fire projectile. Good early-game spell for all classes.', tip: 'Cheap and effective early. Level it up for a solid damage source.' },
-  { name: 'Charged Bolt', type: 'Lightning', source: 'Book', minMag: 25, manaCost: '6', desc: 'Multiple lightning bolts that scatter. Excellent close-range damage.', tip: 'Best used in corridors where bolts concentrate. Random spread in open areas.' },
-  { name: 'Holy Bolt', type: 'Magic', source: 'Book', minMag: 20, manaCost: '7', desc: 'Projectile that damages only undead. Strong against Skeleton King.', tip: 'Niche but powerful in undead-heavy areas. Excellent for Church and some Hell levels.' },
-  { name: 'Healing', type: 'Magic', source: 'Book', minMag: 17, manaCost: '5-8', desc: 'Restore HP. Essential for sustain between fights.', tip: 'Save potion gold by healing with mana between fights.' },
-  { name: 'Heal Other', type: 'Magic', source: 'Book', minMag: 17, manaCost: '5-8', desc: 'Heals another player. Multiplayer support spell.', tip: 'Essential in multiplayer. Keep it hotkeyed.' },
-  { name: 'Inferno', type: 'Fire', source: 'Book', minMag: 20, manaCost: '11', desc: 'Stream of flame in a line. Continuous damage.', tip: 'Great for doorway camping. Hold direction and melt enemies as they approach.' },
-  { name: 'Fire Wall', type: 'Fire', source: 'Book', minMag: 27, manaCost: '28', desc: 'Wall of fire that damages enemies walking through it.', tip: 'Cast on doorways or enemy paths. Excellent area denial. Stack multiple walls.' },
-  { name: 'Fireball', type: 'Fire', source: 'Book', minMag: 48, manaCost: '16', desc: 'Large explosive fire projectile. Splash damage.', tip: 'Primary single-target and AoE fire spell. The workhorse of fire builds.' },
-  { name: 'Lightning', type: 'Lightning', source: 'Book', minMag: 20, manaCost: '10', desc: 'Bolt of lightning in a line. Hits everything in path.', tip: 'Pierce effect hits all enemies in a line. Great in corridors.' },
-  { name: 'Chain Lightning', type: 'Lightning', source: 'Book', minMag: 54, manaCost: '30', desc: 'Lightning that bounces between enemies. Best AoE spell.', tip: 'Highest DPS spell in the game. Bounces to nearby targets. Sorcerer\'s bread and butter.' },
-  { name: 'Flash', type: 'Lightning', source: 'Book', minMag: 33, manaCost: '30', desc: 'AoE lightning around caster. Hits all adjacent enemies.', tip: 'Melee-range AoE. Great panic button when surrounded.' },
-  { name: 'Stone Curse', type: 'Magic', source: 'Book', minMag: 51, manaCost: '60', desc: 'Petrifies an enemy — they can\'t move or attack. Massive damage bonus from melee.', tip: 'THE most important spell for Warriors. Petrify and destroy. Works on almost everything except Diablo.' },
-  { name: 'Teleport', type: 'Magic', source: 'Book', minMag: 81, manaCost: '35', desc: 'Instant movement to cursor location. Best mobility spell.', tip: 'Repositioning, escaping, getting through walls. Essential for Sorcerers. Game-changing spell.' },
-  { name: 'Mana Shield', type: 'Magic', source: 'Book', minMag: 25, manaCost: '33', desc: 'Damage redirected to mana pool. Essential Sorcerer survival.', tip: 'Mandatory for Sorcerers. With huge mana pool, you become nearly unkillable. Recast when it drops.' },
-  { name: 'Town Portal', type: 'Magic', source: 'Scroll/Book', minMag: 20, manaCost: '35', desc: 'Opens portal to town. Your lifeline.', tip: 'Always have scrolls or the spell. Getting trapped without a TP is death.' },
-  { name: 'Guardian', type: 'Fire', source: 'Book', minMag: 61, manaCost: '50', desc: 'Summons hydra that shoots fireballs. Autonomous turret.', tip: 'Cast and forget. Great for area control while you focus elsewhere.' },
-  { name: 'Golem', type: 'Magic', source: 'Book', minMag: 51, manaCost: '100', desc: 'Summons a stone golem to fight for you. Decent tank.', tip: 'Good distraction for enemies. Not hugely durable but buys time.' },
-  { name: 'Elemental', type: 'Fire', source: 'Book', minMag: 35, manaCost: '35', desc: 'Summons fire elemental that seeks enemies.', tip: 'Homing fire damage. Good supplementary damage source.' },
-  { name: 'Apocalypse', type: 'Magic', source: 'Book/Scroll', minMag: 149, manaCost: '150', desc: 'Damages all visible enemies. Room-clearing nuke.', tip: 'Extremely expensive but devastating. Diablo uses this — you can too.' },
-  { name: 'Bone Spirit', type: 'Magic', source: 'Book', minMag: 34, manaCost: '24', desc: 'Homing spirit that deals 1/3 of target\'s current HP.', tip: 'Percentage-based damage = amazing vs high HP enemies. Use as opener.' },
+  { name: 'Firebolt', type: 'Fire', source: 'Book', minMag: 15, manaCost: '3-6', img: 'images/spells/firebolt.png', desc: 'Single fire projectile. Good early-game spell for all classes.', tip: 'Cheap and effective early. Level it up for a solid damage source.' },
+  { name: 'Charged Bolt', type: 'Lightning', source: 'Book', minMag: 25, manaCost: '6', img: 'images/spells/charged-bolt.png', desc: 'Multiple lightning bolts that scatter. Excellent close-range damage.', tip: 'Best used in corridors where bolts concentrate. Random spread in open areas.' },
+  { name: 'Holy Bolt', type: 'Magic', source: 'Book', minMag: 20, manaCost: '7', img: 'images/spells/holy-bolt.png', desc: 'Projectile that damages only undead. Strong against Skeleton King.', tip: 'Niche but powerful in undead-heavy areas. Excellent for Church and some Hell levels.' },
+  { name: 'Healing', type: 'Magic', source: 'Book', minMag: 17, manaCost: '5-8', img: 'images/spells/healing.png', desc: 'Restore HP. Essential for sustain between fights.', tip: 'Save potion gold by healing with mana between fights.' },
+  { name: 'Heal Other', type: 'Magic', source: 'Book', minMag: 17, manaCost: '5-8', img: 'images/spells/heal-other.png', desc: 'Heals another player. Multiplayer support spell.', tip: 'Essential in multiplayer. Keep it hotkeyed.' },
+  { name: 'Inferno', type: 'Fire', source: 'Book', minMag: 20, manaCost: '11', img: 'images/spells/inferno.png', desc: 'Stream of flame in a line. Continuous damage.', tip: 'Great for doorway camping. Hold direction and melt enemies as they approach.' },
+  { name: 'Fire Wall', type: 'Fire', source: 'Book', minMag: 27, manaCost: '28', img: 'images/spells/fire-wall.png', desc: 'Wall of fire that damages enemies walking through it.', tip: 'Cast on doorways or enemy paths. Excellent area denial. Stack multiple walls.' },
+  { name: 'Fireball', type: 'Fire', source: 'Book', minMag: 48, manaCost: '16', img: 'images/spells/fireball.png', desc: 'Large explosive fire projectile. Splash damage.', tip: 'Primary single-target and AoE fire spell. The workhorse of fire builds.' },
+  { name: 'Lightning', type: 'Lightning', source: 'Book', minMag: 20, manaCost: '10', img: 'images/spells/lightning.png', desc: 'Bolt of lightning in a line. Hits everything in path.', tip: 'Pierce effect hits all enemies in a line. Great in corridors.' },
+  { name: 'Chain Lightning', type: 'Lightning', source: 'Book', minMag: 54, manaCost: '30', img: 'images/spells/chain-lightning.png', desc: 'Lightning that bounces between enemies. Best AoE spell.', tip: 'Highest DPS spell in the game. Bounces to nearby targets. Sorcerer\'s bread and butter.' },
+  { name: 'Flash', type: 'Lightning', source: 'Book', minMag: 33, manaCost: '30', img: 'images/spells/flash.png', desc: 'AoE lightning around caster. Hits all adjacent enemies.', tip: 'Melee-range AoE. Great panic button when surrounded.' },
+  { name: 'Stone Curse', type: 'Magic', source: 'Book', minMag: 51, manaCost: '60', img: 'images/spells/stone-curse.png', desc: 'Petrifies an enemy — they can\'t move or attack. Massive damage bonus from melee.', tip: 'THE most important spell for Warriors. Petrify and destroy. Works on almost everything except Diablo.' },
+  { name: 'Teleport', type: 'Magic', source: 'Book', minMag: 81, manaCost: '35', img: 'images/spells/teleport.png', desc: 'Instant movement to cursor location. Best mobility spell.', tip: 'Repositioning, escaping, getting through walls. Essential for Sorcerers. Game-changing spell.' },
+  { name: 'Mana Shield', type: 'Magic', source: 'Book', minMag: 25, manaCost: '33', img: 'images/spells/mana-shield.png', desc: 'Damage redirected to mana pool. Essential Sorcerer survival.', tip: 'Mandatory for Sorcerers. With huge mana pool, you become nearly unkillable. Recast when it drops.' },
+  { name: 'Town Portal', type: 'Magic', source: 'Scroll/Book', minMag: 20, manaCost: '35', img: 'images/spells/town-portal.png', desc: 'Opens portal to town. Your lifeline.', tip: 'Always have scrolls or the spell. Getting trapped without a TP is death.' },
+  { name: 'Guardian', type: 'Fire', source: 'Book', minMag: 61, manaCost: '50', img: 'images/spells/guardian.png', desc: 'Summons hydra that shoots fireballs. Autonomous turret.', tip: 'Cast and forget. Great for area control while you focus elsewhere.' },
+  { name: 'Golem', type: 'Magic', source: 'Book', minMag: 51, manaCost: '100', img: 'images/spells/golem.png', desc: 'Summons a stone golem to fight for you. Decent tank.', tip: 'Good distraction for enemies. Not hugely durable but buys time.' },
+  { name: 'Elemental', type: 'Fire', source: 'Book', minMag: 35, manaCost: '35', img: 'images/spells/elemental.png', desc: 'Summons fire elemental that seeks enemies.', tip: 'Homing fire damage. Good supplementary damage source.' },
+  { name: 'Apocalypse', type: 'Magic', source: 'Book/Scroll', minMag: 149, manaCost: '150', img: 'images/spells/apocalypse.png', desc: 'Damages all visible enemies. Room-clearing nuke.', tip: 'Extremely expensive but devastating. Diablo uses this — you can too.' },
+  { name: 'Bone Spirit', type: 'Magic', source: 'Book', minMag: 34, manaCost: '24', img: 'images/spells/bone-spirit.png', desc: 'Homing spirit that deals 1/3 of target\'s current HP.', tip: 'Percentage-based damage = amazing vs high HP enemies. Use as opener.' },
 ];
 
 const QUESTS = [
@@ -1729,7 +1729,37 @@ function renderMonsters() {
 }
 
 function renderItems() {
+  const itemGallery = [
+    {name:'Potion of Healing',img:'potion-healing'},{name:'Potion of Mana',img:'potion-mana'},{name:'Potion of Rejuv.',img:'potion-rejuv'},
+    {name:'Full Rejuv.',img:'potion-full-rejuv'},{name:'Full Healing',img:'potion-full-healing'},{name:'Ring',img:'ring'},{name:'Amulet',img:'amulet'},
+    {name:'Gold',img:'gold'},{name:'Dagger',img:'dagger'},{name:'Short Sword',img:'short-sword'},{name:'Broad Sword',img:'broad-sword'},
+    {name:'Long Sword',img:'long-sword'},{name:'Great Sword',img:'great-sword'},{name:'Two-Handed Sword',img:'two-handed-sword'},
+    {name:'Morning Star',img:'morning-star'},{name:'Flail',img:'flail'},{name:'War Hammer',img:'war-hammer'},
+    {name:'Axe',img:'axe'},{name:'Battle Axe',img:'battle-axe'},{name:'Cleaver',img:'cleaver'},
+    {name:'Short Bow',img:'short-bow'},{name:'Composite Bow',img:'composite-bow'},
+    {name:'Short Staff',img:'short-staff'},{name:'Long Staff',img:'long-staff'},
+    {name:'Cap',img:'cap'},{name:'Skull Cap',img:'skull-cap'},{name:'Helm',img:'helm'},
+    {name:'Full Helm',img:'full-helm'},{name:'Great Helm',img:'great-helm'},{name:'Crown',img:'crown'},{name:'Undead Crown',img:'undead-crown'},
+    {name:'Buckler',img:'buckler'},{name:'Small Shield',img:'small-shield'},{name:'Kite Shield',img:'kite-shield'},
+    {name:'Large Shield',img:'large-shield'},{name:'Tower Shield',img:'tower-shield'},{name:'Gothic Shield',img:'gothic-shield'},
+    {name:'Rags',img:'rags'},{name:'Leather Armor',img:'leather-armor'},{name:'Hard Leather',img:'hard-leather'},
+    {name:'Studded Leather',img:'studded-leather'},{name:'Ring Mail',img:'ring-mail'},{name:'Chain Mail',img:'chain-mail'},
+    {name:'Scale Mail',img:'scale-mail'},{name:'Splint Mail',img:'splint-mail'},{name:'Breast Plate',img:'breast-plate'},
+    {name:'Gothic Plate',img:'gothic-plate'},{name:'Full Plate',img:'full-plate'},
+    {name:'Book (Grey)',img:'book-grey'},{name:'Book (Red)',img:'book-red'},{name:'Book (Blue)',img:'book-blue'},
+  ].map(function(i) {
+    return '<div style="text-align:center;width:72px">' +
+      '<img src="images/items/' + i.img + '.png" alt="' + i.name + '" style="height:56px;image-rendering:pixelated;display:block;margin:0 auto 4px" onerror="this.style.display=\'none\'">' +
+      '<span style="font-size:10px;color:var(--text-dim);line-height:1.2;display:block">' + i.name + '</span></div>';
+  }).join('');
+
   return `
+    <div class="section-header">Item Gallery</div>
+    <p style="margin-bottom:12px;color:var(--text-dim)">Inventory icons extracted from the original game files.</p>
+    <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:24px;padding:16px;background:rgba(0,0,0,0.3);border-radius:8px;border:1px solid var(--border)">
+      ${itemGallery}
+    </div>
+
     <div class="section-header">Item Quality Tiers</div>
     <div class="card-grid">
       <div class="card">
@@ -1800,9 +1830,10 @@ function renderUniques() {
   return `
     <p style="margin-bottom:16px;color:var(--text-dim)">Unique items have fixed properties and drop from specific sources or randomly from high-level monsters.</p>
     <table class="data-table">
-      <tr><th>Item</th><th>Type</th><th>Requirement</th><th>Damage/AC</th><th>Special Properties</th><th>Source</th></tr>
+      <tr><th></th><th>Item</th><th>Type</th><th>Requirement</th><th>Damage/AC</th><th>Special Properties</th><th>Source</th></tr>
       ${UNIQUE_ITEMS.map(i => `
         <tr>
+          <td style="width:40px;text-align:center">${i.img ? `<img src="${i.img}" alt="${i.name}" style="height:36px;image-rendering:pixelated" onerror="this.style.display='none'">` : ''}</td>
           <td><strong style="color:${i.tier === 'unique' ? 'var(--unique)' : 'var(--blue-bright)'}">${i.name}</strong></td>
           <td>${i.type}</td>
           <td>${i.req}</td>
@@ -1831,9 +1862,12 @@ function renderSpells() {
     <div class="card-grid">
       ${filtered.map(s => `
         <div class="card">
-          <div class="card-title">
-            <span class="badge badge-${s.type === 'Fire' ? 'fire' : s.type === 'Lightning' ? 'lightning' : 'magic'}">${s.type}</span>
-            ${s.name}
+          <div class="card-title" style="display:flex;align-items:center;gap:10px">
+            ${s.img ? `<img class="spell-img" src="${s.img}" alt="${s.name}" style="width:40px;height:40px;image-rendering:pixelated" onerror="this.style.display='none'">` : ''}
+            <div>
+              <span class="badge badge-${s.type === 'Fire' ? 'fire' : s.type === 'Lightning' ? 'lightning' : 'magic'}">${s.type}</span>
+              ${s.name}
+            </div>
           </div>
           <div class="card-subtitle">Min Magic: ${s.minMag} · Mana: ${s.manaCost} · Source: ${s.source}</div>
           <p style="margin:6px 0">${s.desc}</p>
@@ -1865,7 +1899,18 @@ function renderShrines() {
   else if (tab === '⚠️ Risky') filtered = SHRINES.filter(s => s.verdict.startsWith('⚠️'));
   else if (tab === '❌ Avoid') filtered = SHRINES.filter(s => s.verdict.startsWith('❌'));
 
+  const shrineGallery = [
+    {name:'Shrine',img:'shrine-left'},{name:'Goat Shrine',img:'goat-shrine'},{name:'Cauldron',img:'cauldron'},
+    {name:'Barrel',img:'barrel'},{name:'Chest',img:'chest-large'},{name:'Sarcophagus',img:'sarcophagus'},
+    {name:'Book Stand',img:'book-stand'},{name:'Book Case',img:'book-case'},
+  ].map(function(o) {
+    return '<div style="text-align:center"><img src="images/objects/' + o.img + '.png" alt="' + o.name + '" style="height:48px;image-rendering:pixelated;display:block;margin:0 auto 4px" onerror="this.style.display=\'none\'"><span style="font-size:10px;color:var(--text-dim)">' + o.name + '</span></div>';
+  }).join('');
+
   return `
+    <div style="display:flex;flex-wrap:wrap;gap:16px;margin-bottom:20px;padding:12px;background:rgba(0,0,0,0.3);border-radius:8px;border:1px solid var(--border)">
+      ${shrineGallery}
+    </div>
     <div class="tab-bar">
       ${verdicts.map(v => `<div class="tab ${tab === v ? 'active' : ''}" onclick="setSubTab('shrines','${v}')">${v}</div>`).join('')}
     </div>
@@ -1884,7 +1929,17 @@ function renderShrines() {
 }
 
 function renderFountains() {
+  const fountainGallery = [
+    {name:'Blood Fountain',img:'blood-fountain'},{name:'Purifying Fountain',img:'purifying-fountain'},
+    {name:'Murky Fountain',img:'murky-fountain'},{name:'Tears Fountain',img:'tears-fountain'},
+  ].map(function(o) {
+    return '<div style="text-align:center"><img src="images/objects/' + o.img + '.png" alt="' + o.name + '" style="height:48px;image-rendering:pixelated;display:block;margin:0 auto 4px" onerror="this.style.display=\'none\'"><span style="font-size:10px;color:var(--text-dim)">' + o.name + '</span></div>';
+  }).join('');
+
   return `
+    <div style="display:flex;flex-wrap:wrap;gap:16px;margin-bottom:16px;padding:12px;background:rgba(0,0,0,0.3);border-radius:8px;border:1px solid var(--border)">
+      ${fountainGallery}
+    </div>
     <p style="margin-bottom:16px;color:var(--text-dim)">Fountains and pools provide various effects when clicked. Most are beneficial — learn which ones to always use.</p>
     <div class="card-grid">
       ${FOUNTAINS.map(f => `
