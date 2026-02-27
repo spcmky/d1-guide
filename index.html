@@ -1,0 +1,2082 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Diablo I — Companion Codex</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;900&family=Crimson+Text:ital,wght@0,400;0,600;1,400&family=MedievalSharp&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg-deep: #0a0705;
+  --bg-dark: #12100d;
+  --bg-panel: #1a1612;
+  --bg-card: #201b15;
+  --bg-hover: #2a231a;
+  --border: #3d3222;
+  --border-glow: #6b4c1e;
+  --gold: #c9a84c;
+  --gold-bright: #e8c95a;
+  --gold-dim: #8a6d2b;
+  --red: #a83232;
+  --red-bright: #d44;
+  --blue: #4466aa;
+  --blue-bright: #6688cc;
+  --green: #3a8a3a;
+  --text: #d4c4a8;
+  --text-dim: #8a7d6a;
+  --text-bright: #f0e6d0;
+  --fire: #e86420;
+  --lightning: #ffd700;
+  --magic: #7b68ee;
+  --poison: #44bb44;
+  --unique: #c7b377;
+}
+
+* { margin:0; padding:0; box-sizing:border-box; }
+
+html, body {
+  height: 100%;
+  background: var(--bg-deep);
+  color: var(--text);
+  font-family: 'Crimson Text', Georgia, serif;
+  font-size: 15px;
+  line-height: 1.6;
+  overflow: hidden;
+}
+
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: var(--bg-dark); }
+::-webkit-scrollbar-thumb { background: var(--gold-dim); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--gold); }
+
+#app {
+  display: flex;
+  height: 100vh;
+}
+
+/* ─── Sidebar ─── */
+.sidebar {
+  width: 240px;
+  min-width: 240px;
+  background: var(--bg-dark);
+  border-right: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.sidebar-logo {
+  padding: 20px 16px 16px;
+  text-align: center;
+  border-bottom: 1px solid var(--border);
+}
+
+.sidebar-logo h1 {
+  font-family: 'Cinzel', serif;
+  font-weight: 900;
+  font-size: 22px;
+  color: var(--gold);
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  text-shadow: 0 0 20px rgba(201,168,76,0.3);
+}
+
+.sidebar-logo .subtitle {
+  font-family: 'MedievalSharp', cursive;
+  font-size: 11px;
+  color: var(--text-dim);
+  letter-spacing: 2px;
+  margin-top: 2px;
+}
+
+.sidebar-nav {
+  flex: 1;
+  overflow-y: auto;
+  padding: 8px 0;
+}
+
+.nav-section {
+  padding: 12px 16px 4px;
+  font-family: 'Cinzel', serif;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 3px;
+  color: var(--gold-dim);
+  text-transform: uppercase;
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 16px;
+  cursor: pointer;
+  transition: all 0.15s;
+  border-left: 2px solid transparent;
+  font-size: 14px;
+}
+
+.nav-item:hover {
+  background: var(--bg-hover);
+  color: var(--text-bright);
+}
+
+.nav-item.active {
+  background: rgba(201,168,76,0.08);
+  border-left-color: var(--gold);
+  color: var(--gold);
+}
+
+.nav-icon {
+  font-size: 16px;
+  width: 20px;
+  text-align: center;
+}
+
+/* ─── Main ─── */
+.main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.topbar {
+  padding: 12px 24px;
+  background: var(--bg-dark);
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.topbar h2 {
+  font-family: 'Cinzel', serif;
+  font-weight: 700;
+  font-size: 18px;
+  color: var(--gold);
+  letter-spacing: 2px;
+}
+
+.search-box {
+  background: var(--bg-panel);
+  border: 1px solid var(--border);
+  padding: 6px 12px;
+  border-radius: 4px;
+  color: var(--text);
+  font-family: 'Crimson Text', serif;
+  font-size: 14px;
+  width: 220px;
+  outline: none;
+}
+.search-box:focus { border-color: var(--gold-dim); }
+
+.content {
+  flex: 1;
+  overflow-y: auto;
+  padding: 24px;
+}
+
+/* ─── Tab Bar ─── */
+.tab-bar {
+  display: flex;
+  gap: 2px;
+  margin-bottom: 20px;
+  border-bottom: 1px solid var(--border);
+  flex-wrap: wrap;
+}
+
+.tab {
+  padding: 8px 16px;
+  cursor: pointer;
+  font-family: 'Cinzel', serif;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  color: var(--text-dim);
+  border-bottom: 2px solid transparent;
+  transition: all 0.15s;
+}
+
+.tab:hover { color: var(--text); }
+.tab.active { color: var(--gold); border-bottom-color: var(--gold); }
+
+/* ─── Cards ─── */
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+.card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 16px;
+  transition: all 0.2s;
+}
+
+.card:hover {
+  border-color: var(--border-glow);
+  box-shadow: 0 0 20px rgba(201,168,76,0.05);
+}
+
+.card-title {
+  font-family: 'Cinzel', serif;
+  font-weight: 700;
+  font-size: 15px;
+  color: var(--gold);
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.card-subtitle {
+  font-size: 12px;
+  color: var(--text-dim);
+  font-family: 'Cinzel', serif;
+  letter-spacing: 1px;
+  margin-bottom: 6px;
+}
+
+.badge {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 3px;
+  font-size: 11px;
+  font-family: 'Cinzel', serif;
+  font-weight: 600;
+  letter-spacing: 1px;
+}
+
+.badge-fire { background: rgba(232,100,32,0.15); color: var(--fire); border: 1px solid rgba(232,100,32,0.3); }
+.badge-lightning { background: rgba(255,215,0,0.1); color: var(--lightning); border: 1px solid rgba(255,215,0,0.25); }
+.badge-magic { background: rgba(123,104,238,0.12); color: var(--magic); border: 1px solid rgba(123,104,238,0.3); }
+.badge-unique { background: rgba(199,179,119,0.12); color: var(--unique); border: 1px solid rgba(199,179,119,0.3); }
+.badge-red { background: rgba(168,50,50,0.15); color: var(--red-bright); border: 1px solid rgba(168,50,50,0.3); }
+.badge-green { background: rgba(58,138,58,0.15); color: var(--poison); border: 1px solid rgba(58,138,58,0.3); }
+.badge-blue { background: rgba(68,102,170,0.15); color: var(--blue-bright); border: 1px solid rgba(68,102,170,0.3); }
+
+/* ─── Tables ─── */
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 16px;
+  font-size: 14px;
+}
+
+.data-table th {
+  font-family: 'Cinzel', serif;
+  font-weight: 600;
+  font-size: 11px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--gold-dim);
+  text-align: left;
+  padding: 8px 12px;
+  border-bottom: 1px solid var(--border);
+}
+
+.data-table td {
+  padding: 8px 12px;
+  border-bottom: 1px solid rgba(61,50,34,0.4);
+  vertical-align: top;
+}
+
+.data-table tr:hover td { background: rgba(201,168,76,0.03); }
+
+/* ─── Stat Bars ─── */
+.stat-bar-wrap { margin: 3px 0; }
+.stat-bar-label {
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+  margin-bottom: 2px;
+}
+.stat-bar {
+  height: 6px;
+  background: var(--bg-deep);
+  border-radius: 3px;
+  overflow: hidden;
+}
+.stat-bar-fill {
+  height: 100%;
+  border-radius: 3px;
+  transition: width 0.5s;
+}
+
+/* ─── Section Headers ─── */
+.section-header {
+  font-family: 'Cinzel', serif;
+  font-weight: 700;
+  font-size: 16px;
+  color: var(--gold);
+  margin: 24px 0 12px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid var(--border);
+  letter-spacing: 1px;
+}
+
+.section-header:first-child { margin-top: 0; }
+
+.info-block {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 16px;
+  margin-bottom: 16px;
+}
+
+.info-block p { margin-bottom: 8px; }
+.info-block p:last-child { margin-bottom: 0; }
+
+.tip {
+  background: rgba(201,168,76,0.06);
+  border-left: 3px solid var(--gold-dim);
+  padding: 10px 14px;
+  margin: 10px 0;
+  font-style: italic;
+  font-size: 14px;
+}
+
+.warning {
+  background: rgba(168,50,50,0.08);
+  border-left: 3px solid var(--red);
+  padding: 10px 14px;
+  margin: 10px 0;
+  font-size: 14px;
+}
+
+.inline-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 6px 0;
+}
+
+.detail-panel {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+@media (max-width: 800px) {
+  .detail-panel { grid-template-columns: 1fr; }
+  .card-grid { grid-template-columns: 1fr; }
+}
+
+.expand-btn {
+  background: none;
+  border: 1px solid var(--border);
+  color: var(--gold-dim);
+  padding: 4px 12px;
+  border-radius: 3px;
+  cursor: pointer;
+  font-family: 'Cinzel', serif;
+  font-size: 11px;
+  letter-spacing: 1px;
+  transition: all 0.15s;
+}
+.expand-btn:hover { border-color: var(--gold); color: var(--gold); }
+
+/* Decorative corner */
+.corner-decor {
+  position: relative;
+}
+.corner-decor::before {
+  content: '◆';
+  position: absolute;
+  top: -4px;
+  left: -4px;
+  color: var(--gold-dim);
+  font-size: 8px;
+}
+
+/* Glow effect */
+@keyframes pulse-glow {
+  0%, 100% { box-shadow: 0 0 5px rgba(201,168,76,0.1); }
+  50% { box-shadow: 0 0 15px rgba(201,168,76,0.2); }
+}
+
+.glow { animation: pulse-glow 3s infinite; }
+
+/* ═══ CHARACTER BUILDER ═══ */
+.cb-layout {
+  display: grid;
+  grid-template-columns: 340px 1fr;
+  gap: 20px;
+  min-height: 600px;
+}
+@media (max-width: 900px) { .cb-layout { grid-template-columns: 1fr; } }
+
+/* Character Sheet Panel — styled like the in-game UI */
+.char-sheet {
+  background: #151009;
+  border: 2px solid #4a3a1e;
+  border-radius: 2px;
+  position: relative;
+  overflow: hidden;
+  box-shadow: inset 0 0 40px rgba(0,0,0,0.6), 0 0 30px rgba(0,0,0,0.5);
+}
+.char-sheet::before {
+  content: '';
+  position: absolute;
+  inset: 3px;
+  border: 1px solid rgba(201,168,76,0.15);
+  pointer-events: none;
+  z-index: 1;
+}
+
+.cs-header {
+  text-align: center;
+  padding: 14px 16px 10px;
+  border-bottom: 1px solid #3a2a12;
+  background: linear-gradient(180deg, #1e160c, #151009);
+}
+.cs-header .cs-name {
+  font-family: 'Cinzel', serif;
+  font-weight: 900;
+  font-size: 18px;
+  color: var(--gold);
+  letter-spacing: 3px;
+  text-shadow: 0 0 10px rgba(201,168,76,0.4);
+}
+.cs-header .cs-class {
+  font-family: 'MedievalSharp', cursive;
+  font-size: 12px;
+  color: var(--text-dim);
+  letter-spacing: 2px;
+}
+
+.cs-body {
+  padding: 12px 16px;
+}
+
+/* Stat rows like in-game */
+.cs-stat-group {
+  margin-bottom: 12px;
+}
+.cs-stat-group-title {
+  font-family: 'Cinzel', serif;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 3px;
+  color: #6b5a3a;
+  text-transform: uppercase;
+  margin-bottom: 4px;
+  padding-bottom: 2px;
+  border-bottom: 1px solid #2a2010;
+}
+.cs-stat-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 3px 0;
+  font-size: 14px;
+}
+.cs-stat-label {
+  color: #a0906a;
+  font-family: 'Cinzel', serif;
+  font-size: 12px;
+  letter-spacing: 1px;
+}
+.cs-stat-value {
+  font-family: 'Cinzel', serif;
+  font-weight: 700;
+  font-size: 14px;
+  color: var(--text-bright);
+  min-width: 40px;
+  text-align: right;
+}
+.cs-stat-value.modified { color: var(--blue-bright); }
+.cs-stat-value.boosted { color: #5ae85a; }
+.cs-stat-value.reduced { color: var(--red-bright); }
+
+.cs-stat-bonus {
+  font-size: 11px;
+  margin-left: 4px;
+}
+.cs-stat-bonus.pos { color: #5ae85a; }
+.cs-stat-bonus.neg { color: var(--red-bright); }
+
+.cs-divider {
+  height: 1px;
+  background: linear-gradient(90deg, transparent, #4a3a1e, transparent);
+  margin: 10px 0;
+}
+
+/* Equipment Paper Doll */
+.cs-paperdoll {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-areas:
+    "helm   amulet  weapon"
+    "armor  armor   shield"
+    "ring1  ring2   .";
+  gap: 4px;
+  margin: 8px 0;
+}
+.cs-paperdoll .slot-helm   { grid-area: helm; }
+.cs-paperdoll .slot-amulet { grid-area: amulet; }
+.cs-paperdoll .slot-weapon { grid-area: weapon; }
+.cs-paperdoll .slot-armor  { grid-area: armor; }
+.cs-paperdoll .slot-shield { grid-area: shield; }
+.cs-paperdoll .slot-ring1  { grid-area: ring1; }
+.cs-paperdoll .slot-ring2  { grid-area: ring2; }
+.cs-equip-slot {
+  background: #0e0a05;
+  border: 1px solid #2e2412;
+  border-radius: 2px;
+  padding: 6px 8px;
+  min-height: 42px;
+  cursor: pointer;
+  transition: all 0.15s;
+  position: relative;
+}
+.cs-equip-slot:hover {
+  border-color: var(--gold-dim);
+  background: #18120a;
+}
+.cs-equip-slot.filled {
+  border-color: #4a3a1e;
+  background: rgba(201,168,76,0.04);
+}
+.cs-equip-slot.filled.unique-item { border-color: #a08840; }
+.cs-slot-label {
+  font-family: 'Cinzel', serif;
+  font-size: 8px;
+  letter-spacing: 2px;
+  color: #5a4a2a;
+  text-transform: uppercase;
+}
+.cs-slot-item {
+  font-size: 12px;
+  color: var(--text);
+  margin-top: 2px;
+  line-height: 1.3;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.cs-slot-item.color-unique { color: var(--unique); }
+.cs-slot-item.color-magic { color: var(--blue-bright); }
+.cs-slot-remove {
+  position: absolute;
+  top: 2px;
+  right: 4px;
+  font-size: 12px;
+  color: var(--red);
+  cursor: pointer;
+  opacity: 0;
+  transition: opacity 0.15s;
+}
+.cs-equip-slot:hover .cs-slot-remove { opacity: 1; }
+
+/* Resist bars in character sheet */
+.cs-resist-bar {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 2px 0;
+  font-size: 12px;
+}
+.cs-resist-icon { width: 16px; text-align: center; font-size: 12px; }
+.cs-resist-track {
+  flex: 1;
+  height: 5px;
+  background: #1a1208;
+  border-radius: 2px;
+  overflow: hidden;
+}
+.cs-resist-fill {
+  height: 100%;
+  border-radius: 2px;
+  transition: width 0.3s;
+}
+.cs-resist-pct {
+  font-family: 'Cinzel', serif;
+  font-weight: 700;
+  font-size: 11px;
+  min-width: 32px;
+  text-align: right;
+  color: var(--text-dim);
+}
+
+/* Right panel — controls */
+.cb-controls {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.cb-section {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 14px;
+}
+.cb-section-title {
+  font-family: 'Cinzel', serif;
+  font-weight: 700;
+  font-size: 13px;
+  color: var(--gold);
+  letter-spacing: 1px;
+  margin-bottom: 10px;
+  padding-bottom: 4px;
+  border-bottom: 1px solid var(--border);
+}
+
+.cb-class-select {
+  display: flex;
+  gap: 6px;
+}
+.cb-class-btn {
+  flex: 1;
+  padding: 10px 8px;
+  background: var(--bg-panel);
+  border: 1px solid var(--border);
+  border-radius: 3px;
+  color: var(--text);
+  font-family: 'Cinzel', serif;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  text-align: center;
+  transition: all 0.15s;
+}
+.cb-class-btn:hover { border-color: var(--gold-dim); }
+.cb-class-btn.active {
+  border-color: var(--gold);
+  background: rgba(201,168,76,0.1);
+  color: var(--gold);
+}
+
+.cb-level-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 8px;
+}
+.cb-level-label {
+  font-family: 'Cinzel', serif;
+  font-size: 12px;
+  color: var(--text-dim);
+  min-width: 50px;
+}
+.cb-level-slider {
+  flex: 1;
+  -webkit-appearance: none;
+  appearance: none;
+  height: 4px;
+  background: #2a2010;
+  border-radius: 2px;
+  outline: none;
+}
+.cb-level-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 16px;
+  height: 16px;
+  background: var(--gold);
+  border-radius: 50%;
+  cursor: pointer;
+  box-shadow: 0 0 6px rgba(201,168,76,0.4);
+}
+.cb-level-val {
+  font-family: 'Cinzel', serif;
+  font-weight: 700;
+  font-size: 16px;
+  color: var(--gold);
+  min-width: 30px;
+  text-align: right;
+}
+
+/* Stat point allocator */
+.cb-stat-alloc {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin-top: 8px;
+}
+.cb-stat-ctrl {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--bg-panel);
+  border: 1px solid var(--border);
+  border-radius: 3px;
+  padding: 6px 10px;
+}
+.cb-stat-ctrl-label {
+  flex: 1;
+  font-family: 'Cinzel', serif;
+  font-size: 11px;
+  color: var(--text-dim);
+  letter-spacing: 1px;
+}
+.cb-stat-ctrl-val {
+  font-family: 'Cinzel', serif;
+  font-weight: 700;
+  font-size: 14px;
+  color: var(--text-bright);
+  min-width: 24px;
+  text-align: center;
+}
+.cb-stat-btn {
+  width: 22px;
+  height: 22px;
+  background: #2a2010;
+  border: 1px solid var(--border);
+  border-radius: 2px;
+  color: var(--gold);
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.1s;
+  line-height: 1;
+  padding: 0;
+}
+.cb-stat-btn:hover { background: #3a3018; border-color: var(--gold-dim); }
+.cb-stat-btn:disabled { opacity: 0.3; cursor: default; }
+
+.cb-points-remaining {
+  text-align: center;
+  font-family: 'Cinzel', serif;
+  font-size: 12px;
+  color: var(--gold-dim);
+  margin-top: 6px;
+}
+.cb-points-remaining span { color: var(--gold); font-weight: 700; font-size: 16px; }
+
+/* Equipment picker */
+.cb-equip-list {
+  max-height: 300px;
+  overflow-y: auto;
+  margin-top: 8px;
+}
+.cb-equip-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 6px 8px;
+  border-bottom: 1px solid rgba(61,50,34,0.3);
+  cursor: pointer;
+  transition: background 0.1s;
+  font-size: 13px;
+}
+.cb-equip-item:hover { background: rgba(201,168,76,0.05); }
+.cb-equip-item.equipped { background: rgba(201,168,76,0.08); }
+.cb-equip-name { color: var(--text); }
+.cb-equip-name.unique { color: var(--unique); }
+.cb-equip-name.magic { color: var(--blue-bright); }
+.cb-equip-stats { font-size: 11px; color: var(--text-dim); }
+.cb-equip-btn {
+  font-size: 10px;
+  padding: 2px 8px;
+  background: none;
+  border: 1px solid var(--border);
+  color: var(--gold-dim);
+  border-radius: 2px;
+  cursor: pointer;
+  font-family: 'Cinzel', serif;
+  letter-spacing: 1px;
+}
+.cb-equip-btn:hover { border-color: var(--gold); color: var(--gold); }
+
+.cb-slot-tabs {
+  display: flex;
+  gap: 2px;
+  flex-wrap: wrap;
+}
+.cb-slot-tab {
+  padding: 4px 10px;
+  font-family: 'Cinzel', serif;
+  font-size: 10px;
+  letter-spacing: 1px;
+  color: var(--text-dim);
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  transition: all 0.15s;
+}
+.cb-slot-tab:hover { color: var(--text); }
+.cb-slot-tab.active { color: var(--gold); border-bottom-color: var(--gold); }
+
+/* Computed stats summary */
+.cb-computed {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px;
+  margin-top: 8px;
+}
+.cb-comp-stat {
+  display: flex;
+  justify-content: space-between;
+  font-size: 13px;
+  padding: 3px 0;
+}
+.cb-comp-label { color: var(--text-dim); }
+.cb-comp-val { color: var(--text-bright); font-weight: 600; }
+</style>
+</head>
+<body>
+<div id="app">
+<!-- Sidebar -->
+<div class="sidebar">
+  <div class="sidebar-logo">
+    <h1>Diablo</h1>
+    <div class="subtitle">Companion Codex</div>
+  </div>
+  <div class="sidebar-nav" id="sidebar-nav"></div>
+</div>
+
+<!-- Main Content -->
+<div class="main">
+  <div class="topbar">
+    <h2 id="page-title">Welcome</h2>
+    <input class="search-box" type="text" placeholder="Search codex..." id="search-box">
+  </div>
+  <div class="content" id="content"></div>
+</div>
+</div>
+
+<script>
+// ═══════════════════════════════════════════════════
+//  DIABLO I COMPANION CODEX — Complete Game Database
+// ═══════════════════════════════════════════════════
+
+const NAV = [
+  { section: 'Tools' },
+  { id: 'charbuilder', label: 'Character Builder', icon: '🧙' },
+  { section: 'Reference' },
+  { id: 'classes', label: 'Character Classes', icon: '⚔️' },
+  { id: 'levels', label: 'Dungeon Levels', icon: '🏰' },
+  { id: 'monsters', label: 'Monster Bestiary', icon: '👹' },
+  { id: 'items', label: 'Items & Gear', icon: '🛡️' },
+  { id: 'uniques', label: 'Unique Items', icon: '✦' },
+  { id: 'spells', label: 'Spells & Magic', icon: '🔮' },
+  { id: 'quests', label: 'Quests', icon: '📜' },
+  { section: 'Environment' },
+  { id: 'shrines', label: 'Shrines', icon: '⛩️' },
+  { id: 'fountains', label: 'Fountains & Pools', icon: '💧' },
+  { section: 'Strategy' },
+  { id: 'leveling', label: 'Leveling & XP Guide', icon: '📈' },
+  { id: 'builds', label: 'Class Builds', icon: '🎯' },
+  { id: 'strategies', label: 'Scenario Strategies', icon: '🗡️' },
+  { id: 'resistances', label: 'Resists & Immunities', icon: '🔥' },
+  { id: 'tips', label: 'Tips & Tricks', icon: '💡' },
+];
+
+// ─── DATA ───
+
+const CLASSES = {
+  warrior: {
+    name: 'Warrior', icon: '⚔️',
+    desc: 'Master of melee combat. Highest strength and vitality growth. Best with swords, maces, and heavy armor. The Warrior excels at tanking damage and dealing devastating melee blows.',
+    baseStats: { str: 30, mag: 10, dex: 20, vit: 25 },
+    maxStats: { str: 250, mag: 50, dex: 60, vit: 100 },
+    perLevel: { str: 1, mag: 1, dex: 1, vit: 1, life: 2, mana: 1 },
+    startLife: 70, startMana: 10,
+    skills: 'Repair — Can repair items at cost of max durability. Higher character level = less durability lost.',
+    tips: [
+      'Stone Curse is your best friend — petrify enemies and hack them down safely.',
+      'Keep a bow as swap for luring single enemies from packs.',
+      'Prioritize Vitality after meeting gear requirements for Strength.',
+      'Against Diablo, use Mana Shield if you have enough Magic to cast it.',
+      'Kings Sword of Haste is the ideal endgame weapon.',
+    ],
+    bestGear: 'Obsidian gear of the Zodiac/Tiger for resistances and survivability. Godly Plate of the Whale for max HP. Kings Sword of Haste for DPS.',
+    weaknesses: 'Very limited magic capability. Struggles with ranged enemies in open areas. Mana-starved without gear support.',
+  },
+  rogue: {
+    name: 'Rogue', icon: '🏹',
+    desc: 'Master of ranged combat. Highest Dexterity growth. Excels with bows and has decent magic capability. The Rogue is a versatile class that can kite enemies effectively.',
+    baseStats: { str: 20, mag: 15, dex: 30, vit: 20 },
+    maxStats: { str: 55, mag: 70, dex: 250, vit: 80 },
+    perLevel: { str: 1, mag: 1, dex: 1, vit: 1, life: 1.5, mana: 1.5 },
+    startLife: 45, startMana: 22,
+    skills: 'Disarm Trap — Can disarm trapped chests and doors without triggering them.',
+    tips: [
+      'Kiting is key — never stand still when enemies approach.',
+      'Invest in Magic for Stone Curse — it transforms the class.',
+      'Dexterity boosts both damage AND to-hit with bows.',
+      'Use doorways and corridors to create chokepoints.',
+      'Emerald bows of the Bear provide great sustain.',
+    ],
+    bestGear: 'Eagles/Merciless bow of the Bear or Thunder. Obsidian armor of the Zodiac. Dexterity-boosting jewelry.',
+    weaknesses: 'Lower HP pool than Warrior. Struggles in tight corridors where kiting is impossible. Arrows can miss at low Dex.',
+  },
+  sorcerer: {
+    name: 'Sorcerer', icon: '🔮',
+    desc: 'Master of magic. Highest Magic growth and massive mana pool. Can learn all spells to high levels. The most powerful class in endgame but fragile early on.',
+    baseStats: { str: 15, mag: 35, dex: 15, vit: 20 },
+    maxStats: { str: 45, mag: 250, dex: 85, vit: 80 },
+    perLevel: { str: 1, mag: 1, dex: 1, vit: 1, life: 1, mana: 2 },
+    startLife: 30, startMana: 70,
+    skills: 'Recharge — Can recharge staff charges at cost of max charges. Higher character level = fewer charges lost.',
+    tips: [
+      'Mana Shield is mandatory — it redirects damage to your massive mana pool.',
+      'Chain Lightning is your primary AoE. Fireball for single targets.',
+      'Teleport is both offense and defense — position instantly.',
+      'Staff of Charged Bolt is amazing early — free spell casts.',
+      'Get 2 points of Magic per level-up; mana scaling is insane.',
+    ],
+    bestGear: 'Thinking Cap, Dreamflange, Naj\'s Light Plate. Obsidian of the Zodiac for resistances. MAX Magic everywhere.',
+    weaknesses: 'Extremely fragile without Mana Shield. Melee is nearly useless. Dependent on mana potions early game.',
+  },
+};
+
+const DUNGEON_LEVELS = [
+  { level: '1-4', name: 'Cathedral / Church', tileset: 'Church', mlvl: '1-4', difficulty: 'Easy',
+    monsters: 'Fallen Ones, Zombies, Skeletons, Scavengers, Bats, The Butcher (lvl 2)',
+    desc: 'The upper cathedral. Relatively safe area to learn the game. Zombies are slow, Fallen Ones flee when leader dies. Skeletons can block doorways.',
+    tips: 'Clear every room methodically. Use doorways as chokepoints. Find the Butcher quest on level 2 — but come back prepared. Skeleton King is on level 3.' },
+  { level: '5-8', name: 'Catacombs', tileset: 'Catacombs', mlvl: '5-8', difficulty: 'Moderate',
+    monsters: 'Goat Men, Acid Beasts, Lightning Demons, Hiddens, Illusion Weavers, Leoric (lvl 3)',
+    desc: 'Narrow corridors with dangerous ranged enemies. Lightning Demons and Illusion Weavers can be lethal in groups. Acid Beasts spit at range.',
+    tips: 'The Hidden enemies are invisible until they attack — listen for sounds. Goat archers are deadly in packs; lure them around corners. Stock up on potions.' },
+  { level: '9-12', name: 'Caves', tileset: 'Caves', mlvl: '9-12', difficulty: 'Hard',
+    monsters: 'Balrogs, Vipers, Succubi, Magma Demons, Storm Riders, Lava Lords',
+    desc: 'Open cave areas with fire and lightning enemies. Succubi cast Blood Star which is extremely dangerous. Magma Demons fire Inferno.',
+    tips: 'Succubi are priority targets — their Blood Star is devastating. Use Stone Curse liberally. Lightning immune enemies appear here; use physical or fire damage.' },
+  { level: '13-16', name: 'Hell', tileset: 'Hell', mlvl: '13-16', difficulty: 'Extreme',
+    monsters: 'Blood Knights, Soul Burners, Advocates, Steel Lords, Doom Guards, Diablo (lvl 16)',
+    desc: 'The deepest depths. Blood Knights are fast and hit hard. Advocates cast powerful spells. Steel Lords and Doom Guards are tanky.',
+    tips: 'Blood Knights are melee powerhouses — Stone Curse or range them. Advocates must be killed quickly or they overwhelm you with magic. Diablo is on level 16 — bring everything you have.' },
+];
+
+const MONSTERS = [
+  { name: 'Zombie', area: 'Church 1-3', hp: '6-18', ac: '5-15', dmg: '2-6', xp: '54-108', resist: 'None', immune: 'None', type: 'Undead', tips: 'Slow and predictable. Attack and back away.' },
+  { name: 'Fallen One', area: 'Church 1-3', hp: '4-12', ac: '10-20', dmg: '1-4', xp: '46-80', resist: 'None', immune: 'None', type: 'Animal', tips: 'Kill the Shaman first — others flee when he dies and he can resurrect them.' },
+  { name: 'Skeleton', area: 'Church 1-4', hp: '8-20', ac: '15-25', dmg: '2-8', xp: '64-120', resist: 'None', immune: 'Magic', type: 'Undead', tips: 'Immune to Magic damage type. Use fire, lightning, or physical.' },
+  { name: 'Skeleton Archer', area: 'Church 2-4', hp: '6-14', ac: '20-30', dmg: '2-8', xp: '72-140', resist: 'None', immune: 'Magic', type: 'Undead', tips: 'Same immunities as Skeletons. Close distance quickly or use fire.' },
+  { name: 'Scavenger', area: 'Church 1-3', hp: '5-15', ac: '10-18', dmg: '1-6', xp: '60-100', resist: 'None', immune: 'None', type: 'Animal', tips: 'Fast but fragile. Will flee at low HP.' },
+  { name: 'The Butcher', area: 'Church 2 (Quest)', hp: '110', ac: '25', dmg: '6-12', xp: '440', resist: 'None', immune: 'None', type: 'Demon', tips: 'Famous "Ahh, fresh meat!" — lure him into a doorway to fight safely. Or use fire from behind grating.' },
+  { name: 'Skeleton King', area: 'Church 3 (Quest)', hp: '240', ac: '35', dmg: '6-16', xp: '1360', resist: 'Fire, Lightning', immune: 'Magic', type: 'Undead', tips: 'Summons skeletons. Focus him down and ignore adds. Holy Bolt is very effective.' },
+  { name: 'Goat Man', area: 'Catacombs 5-7', hp: '24-50', ac: '25-40', dmg: '4-12', xp: '180-340', resist: 'None', immune: 'None', type: 'Demon', tips: 'Come in melee and ranged variants. Kill archers first.' },
+  { name: 'Acid Beast', area: 'Catacombs 5-7', hp: '20-40', ac: '20-30', dmg: '2-14', xp: '156-260', resist: 'None', immune: 'None', type: 'Animal', tips: 'Spit acid at range. Close distance to stop them from spitting.' },
+  { name: 'Hidden', area: 'Catacombs 5-8', hp: '30-60', ac: '30-45', dmg: '6-14', xp: '240-420', resist: 'None', immune: 'None', type: 'Demon', tips: 'Invisible until attacking. Listen for footsteps. Can be revealed with Infravision.' },
+  { name: 'Lightning Demon', area: 'Catacombs 6-8', hp: '40-70', ac: '35-50', dmg: '1-10 + Lightning', xp: '300-500', resist: 'Lightning', immune: 'None', type: 'Demon', tips: 'Lightning trails behind them. Don\'t chase — let them come to you.' },
+  { name: 'Succubus', area: 'Caves 9-12', hp: '60-120', ac: '40-60', dmg: '1-16 (Blood Star)', xp: '700-1200', resist: 'Magic', immune: 'None', type: 'Demon', tips: 'Cast Blood Star which homes in. Extremely dangerous in groups. Priority kill target. Use Stone Curse.' },
+  { name: 'Balrog', area: 'Caves 10-12', hp: '80-160', ac: '50-70', dmg: '10-20', xp: '1000-1600', resist: 'Fire', immune: 'None', type: 'Demon', tips: 'Large, powerful melee fighters. Resist Fire. Use Lightning or physical.' },
+  { name: 'Magma Demon', area: 'Caves 9-11', hp: '50-100', ac: '35-55', dmg: '6-16 (Inferno)', xp: '600-1000', resist: 'Fire', immune: 'Magic', type: 'Demon', tips: 'Breathe Inferno. Immune to Magic, resist Fire. Use Lightning or physical attacks.' },
+  { name: 'Viper', area: 'Caves 9-12', hp: '60-110', ac: '45-60', dmg: '1-18 + Charge', xp: '700-1100', resist: 'Magic', immune: 'None', type: 'Demon', tips: 'Charge attack has unusual hit detection. Stone Curse is very effective.' },
+  { name: 'Blood Knight', area: 'Hell 13-16', hp: '120-200', ac: '60-80', dmg: '15-30', xp: '1800-2800', resist: 'Fire, Lightning', immune: 'Magic', type: 'Demon', tips: 'Fast, hard-hitting melee. Resist Fire and Lightning. Use physical damage or Stone Curse.' },
+  { name: 'Soul Burner', area: 'Hell 13-15', hp: '80-140', ac: '50-65', dmg: '10-20', xp: '1200-2000', resist: 'Fire', immune: 'Lightning', type: 'Undead', tips: 'Immune to Lightning. Use Fire or physical attacks.' },
+  { name: 'Advocate', area: 'Hell 14-16', hp: '100-180', ac: '55-70', dmg: '1-20 (spells)', xp: '1600-2600', resist: 'Magic, Fire', immune: 'Lightning', type: 'Demon', tips: 'Dangerous casters. Immune to Lightning, resist Magic and Fire. Rush them down with melee.' },
+  { name: 'Steel Lord', area: 'Hell 15-16', hp: '150-240', ac: '70-85', dmg: '12-28', xp: '2400-3600', resist: 'Fire, Lightning, Magic', immune: 'None', type: 'Demon', tips: 'Triple resist but no immunities. Very tanky. Physical damage is most reliable.' },
+  { name: 'Diablo', area: 'Hell 16 (Boss)', hp: '1666', ac: '90', dmg: '30-60 + Apocalypse', xp: '30666', resist: 'Fire, Lightning, Magic', immune: 'None', type: 'Demon', tips: 'Final boss. Triple resist but no immunities. Stone Curse + melee is safest. Mana Shield for Sorcerers. Bring Full Rejuvenation potions.' },
+];
+
+const UNIQUE_ITEMS = [
+  { name: 'The Butcher\'s Cleaver', type: 'Cleaver', req: '0 Str', damage: '4-24', special: 'Unusual item damage, +10 Str', how: 'Drop from The Butcher quest', tier: 'unique' },
+  { name: 'Undead Crown', type: 'Crown', req: '0 Str', ac: '8', special: 'Life Stealing', how: 'Drop from Skeleton King quest', tier: 'unique' },
+  { name: 'Arkaine\'s Valor', type: 'Splint Mail', req: '0 Str', ac: '25', special: '+10 Vitality, Fastest hit recovery, -3 damage from enemies', how: 'Valor quest reward (Caves)', tier: 'unique' },
+  { name: 'The Grandfather', type: 'Great Sword', req: '75 Str', damage: '10-20', special: '+5 all attributes, +20 HP, One-handed, +70% To Hit', how: 'Random drop, Hell difficulty', tier: 'unique' },
+  { name: 'King\'s Sword of Haste', type: 'Sword (Prefix+Suffix)', req: 'Varies', damage: 'Varies', special: '+Damage, Fast attack speed — Best Warrior weapon', how: 'Random affix combination', tier: 'magic' },
+  { name: 'Windforce', type: 'Long War Bow', req: '70 Str', damage: '1-14', special: '+5 Str, Knocks target back', how: 'Random drop', tier: 'unique' },
+  { name: 'Naj\'s Light Plate', type: 'Plate Mail', req: '0 Str', ac: '50', special: '+5 Magic, +20 Mana, +20% Resist All, No Str requirement', how: 'Random drop, Hell difficulty', tier: 'unique' },
+  { name: 'Thinking Cap', type: 'Skull Cap', req: '0 Str', ac: '4', special: '+30 Mana, +20% Resist All, +2 spell levels', how: 'Random drop', tier: 'unique' },
+  { name: 'Dreamflange', type: 'Mace', req: '0 Str', damage: '1-8', special: '+30 Mana, +50% Resist Magic, +20% Light Radius, +1 spell levels', how: 'Random drop', tier: 'unique' },
+  { name: 'Godly Plate of the Whale', type: 'Full Plate (Prefix+Suffix)', req: 'High Str', ac: '75-85', special: 'Max AC, +100 HP — Best Warrior armor', how: 'Random affix combination (very rare)', tier: 'magic' },
+  { name: 'Obsidian Ring/Amulet of the Zodiac', type: 'Jewelry (Prefix+Suffix)', req: 'None', ac: '-', special: '+All Resists, +All Attributes — Best-in-slot jewelry', how: 'Random affix combination', tier: 'magic' },
+  { name: 'Griswold\'s Edge', type: 'Broad Sword', req: '40 Str', damage: '4-12', special: '-2 damage from enemies, +25% Fire resist, +20 Mana, Fast attack', how: 'Random drop', tier: 'unique' },
+  { name: 'Harlequin Crest', type: 'Helm', req: '0 Str', ac: '15', special: '-1 damage, +7 all attributes, +7 Mana, +7 HP', how: 'Random drop', tier: 'unique' },
+];
+
+const SPELLS = [
+  { name: 'Firebolt', type: 'Fire', source: 'Book', minMag: 15, manaCost: '3-6', desc: 'Single fire projectile. Good early-game spell for all classes.', tip: 'Cheap and effective early. Level it up for a solid damage source.' },
+  { name: 'Charged Bolt', type: 'Lightning', source: 'Book', minMag: 25, manaCost: '6', desc: 'Multiple lightning bolts that scatter. Excellent close-range damage.', tip: 'Best used in corridors where bolts concentrate. Random spread in open areas.' },
+  { name: 'Holy Bolt', type: 'Magic', source: 'Book', minMag: 20, manaCost: '7', desc: 'Projectile that damages only undead. Strong against Skeleton King.', tip: 'Niche but powerful in undead-heavy areas. Excellent for Church and some Hell levels.' },
+  { name: 'Healing', type: 'Magic', source: 'Book', minMag: 17, manaCost: '5-8', desc: 'Restore HP. Essential for sustain between fights.', tip: 'Save potion gold by healing with mana between fights.' },
+  { name: 'Heal Other', type: 'Magic', source: 'Book', minMag: 17, manaCost: '5-8', desc: 'Heals another player. Multiplayer support spell.', tip: 'Essential in multiplayer. Keep it hotkeyed.' },
+  { name: 'Inferno', type: 'Fire', source: 'Book', minMag: 20, manaCost: '11', desc: 'Stream of flame in a line. Continuous damage.', tip: 'Great for doorway camping. Hold direction and melt enemies as they approach.' },
+  { name: 'Fire Wall', type: 'Fire', source: 'Book', minMag: 27, manaCost: '28', desc: 'Wall of fire that damages enemies walking through it.', tip: 'Cast on doorways or enemy paths. Excellent area denial. Stack multiple walls.' },
+  { name: 'Fireball', type: 'Fire', source: 'Book', minMag: 48, manaCost: '16', desc: 'Large explosive fire projectile. Splash damage.', tip: 'Primary single-target and AoE fire spell. The workhorse of fire builds.' },
+  { name: 'Lightning', type: 'Lightning', source: 'Book', minMag: 20, manaCost: '10', desc: 'Bolt of lightning in a line. Hits everything in path.', tip: 'Pierce effect hits all enemies in a line. Great in corridors.' },
+  { name: 'Chain Lightning', type: 'Lightning', source: 'Book', minMag: 54, manaCost: '30', desc: 'Lightning that bounces between enemies. Best AoE spell.', tip: 'Highest DPS spell in the game. Bounces to nearby targets. Sorcerer\'s bread and butter.' },
+  { name: 'Flash', type: 'Lightning', source: 'Book', minMag: 33, manaCost: '30', desc: 'AoE lightning around caster. Hits all adjacent enemies.', tip: 'Melee-range AoE. Great panic button when surrounded.' },
+  { name: 'Stone Curse', type: 'Magic', source: 'Book', minMag: 51, manaCost: '60', desc: 'Petrifies an enemy — they can\'t move or attack. Massive damage bonus from melee.', tip: 'THE most important spell for Warriors. Petrify and destroy. Works on almost everything except Diablo.' },
+  { name: 'Teleport', type: 'Magic', source: 'Book', minMag: 81, manaCost: '35', desc: 'Instant movement to cursor location. Best mobility spell.', tip: 'Repositioning, escaping, getting through walls. Essential for Sorcerers. Game-changing spell.' },
+  { name: 'Mana Shield', type: 'Magic', source: 'Book', minMag: 25, manaCost: '33', desc: 'Damage redirected to mana pool. Essential Sorcerer survival.', tip: 'Mandatory for Sorcerers. With huge mana pool, you become nearly unkillable. Recast when it drops.' },
+  { name: 'Town Portal', type: 'Magic', source: 'Scroll/Book', minMag: 20, manaCost: '35', desc: 'Opens portal to town. Your lifeline.', tip: 'Always have scrolls or the spell. Getting trapped without a TP is death.' },
+  { name: 'Guardian', type: 'Fire', source: 'Book', minMag: 61, manaCost: '50', desc: 'Summons hydra that shoots fireballs. Autonomous turret.', tip: 'Cast and forget. Great for area control while you focus elsewhere.' },
+  { name: 'Golem', type: 'Magic', source: 'Book', minMag: 51, manaCost: '100', desc: 'Summons a stone golem to fight for you. Decent tank.', tip: 'Good distraction for enemies. Not hugely durable but buys time.' },
+  { name: 'Elemental', type: 'Fire', source: 'Book', minMag: 35, manaCost: '35', desc: 'Summons fire elemental that seeks enemies.', tip: 'Homing fire damage. Good supplementary damage source.' },
+  { name: 'Apocalypse', type: 'Magic', source: 'Book/Scroll', minMag: 149, manaCost: '150', desc: 'Damages all visible enemies. Room-clearing nuke.', tip: 'Extremely expensive but devastating. Diablo uses this — you can too.' },
+  { name: 'Bone Spirit', type: 'Magic', source: 'Book', minMag: 34, manaCost: '24', desc: 'Homing spirit that deals 1/3 of target\'s current HP.', tip: 'Percentage-based damage = amazing vs high HP enemies. Use as opener.' },
+];
+
+const QUESTS = [
+  { name: 'The Butcher', level: 'Church 2', trigger: 'Speak to wounded townsman', reward: 'The Butcher\'s Cleaver, XP, gold', desc: 'A notorious demon known for his greeting: "Ahh, fresh meat!" He charges straight at you with his cleaver.',
+    strategy: 'Lure him to a doorway and attack from behind it. Or use the grating trick: open his room, run to the hallway, and fire through the grate. Warriors can face-tank at higher levels.' },
+  { name: 'Poisoned Water Supply', level: 'Church 2', trigger: 'Speak to Pepin', reward: 'Ring of Truth (unique ring)', desc: 'The water supply has been poisoned. Enter the Dark Passage from level 2 to find and cleanse the source.',
+    strategy: 'Clear the special area on level 2. Not particularly difficult — clear monsters and touch the fountain to cleanse it.' },
+  { name: 'The Curse of King Leoric', level: 'Church 3', trigger: 'Enter level 3', reward: 'Undead Crown', desc: 'The Skeleton King lurks on level 3, raising undead minions. A former king driven mad by Diablo\'s influence.',
+    strategy: 'Holy Bolt is extremely effective since he\'s undead. Ignore the summoned skeletons and focus all damage on Leoric. He drops the Undead Crown.' },
+  { name: 'Ogden\'s Sign', level: 'Cathedral 4', trigger: 'Speak to Ogden', reward: 'Harlequin Crest or Magic item', desc: 'Ogden wants his tavern sign recovered from the dungeon.',
+    strategy: 'Find the sign on level 4 and return it. Simple fetch quest. The sign is usually in a dead-end corridor.' },
+  { name: 'The Magic Rock', level: 'Catacombs 5', trigger: 'Speak to Griswold', reward: 'Empyrean Band (unique ring)', desc: 'A magical rock has been found in the catacombs. Griswold needs it for his forge.',
+    strategy: 'Find the glowing rock on level 5 and bring it to Griswold in town.' },
+  { name: 'Valor', level: 'Caves 9', trigger: 'Find Blood Stone book', reward: 'Arkaine\'s Valor (unique armor)', desc: 'A test of valor awaits in the caves. Place blood stones on the correct pedestals.',
+    strategy: 'Find and place all blood stones. The reward — Arkaine\'s Valor — is one of the best armors in the game, especially for Warriors.' },
+  { name: 'Halls of the Blind', level: 'Caves 7', trigger: 'Read book on level 7', reward: 'Optic Amulet (unique amulet)', desc: 'A hidden room contains the Halls of the Blind, filled with invisible enemies.',
+    strategy: 'The Hidden enemies are invisible. Use Infravision or just swing where you hear footsteps. The reward amulet is decent for casters.' },
+  { name: 'Warlord of Blood', level: 'Caves 13', trigger: 'Read steel tome on level 13', reward: 'XP, access continues', desc: 'A powerful Warlord and his knight guards block the way to deeper levels.',
+    strategy: 'Fight the Warlord and Blood Knights. Stone Curse is invaluable here. Use doorways to fight them one at a time.' },
+  { name: 'Lachdanan', level: 'Hell 14', trigger: 'Speak to Lachdanan\'s ghost', reward: 'Veil of Steel (unique helm)', desc: 'The ghost of Lachdanan, a cursed knight, asks you to find the Golden Elixir to free his soul.',
+    strategy: 'Find the Golden Elixir on level 14 and bring it to Lachdanan. Avoid fighting him — he\'s friendly.' },
+  { name: 'Archbishop Lazarus', level: 'Hell 15', trigger: 'Speak to Cain', reward: 'Access to level 16, XP', desc: 'Lazarus, the traitor who led the prince to Diablo, must be hunted down and destroyed.',
+    strategy: 'Enter the portal to Lazarus\'s lair. Kill the Advocates and then Lazarus himself. This opens the path to level 16 and Diablo.' },
+  { name: 'Diablo', level: 'Hell 16', trigger: 'Reach level 16', reward: 'Game completion', desc: 'The Lord of Terror himself awaits. This is the final battle.',
+    strategy: 'Stone Curse + melee is the safest approach. Sorcerers use Mana Shield + Chain Lightning. Bring 8+ Full Rejuvenation potions. Clear all other enemies on 16 before engaging Diablo. His Apocalypse spell hits the entire screen.' },
+];
+
+const SHRINES = [
+  { name: 'Abandoned Shrine', effect: '+2 Dexterity', risk: 'None', verdict: '✅ Always use', desc: 'Permanent +2 Dex. Always beneficial.' },
+  { name: 'Creepy Shrine', effect: '+2 Strength', risk: 'None', verdict: '✅ Always use', desc: 'Permanent +2 Str. Always beneficial.' },
+  { name: 'Cryptic Shrine', effect: 'Restores mana, casts Nova (damages enemies around you)', risk: 'None', verdict: '✅ Always use', desc: 'Free mana restore and AoE damage. Win-win.' },
+  { name: 'Divine Shrine', effect: 'Restores all HP and Mana, gives 1-2 Full Rejuvenation potions', risk: 'None', verdict: '✅ Always use', desc: 'Free full heal and potions. Excellent.' },
+  { name: 'Eerie Shrine', effect: '+2 Magic', risk: 'None', verdict: '✅ Always use', desc: 'Permanent +2 Magic. Always beneficial.' },
+  { name: 'Enchanted Shrine', effect: 'One random spell loses 1 level, all others gain 1 level', risk: '⚠️ Medium', verdict: '⚠️ Risky if you have one key spell', desc: 'Great if you have many spells leveled. Terrible if your main spell gets reduced. Sorcerers should be cautious.' },
+  { name: 'Fascinating Shrine', effect: '+2 to Firebolt, permanently lose some max Mana', risk: '🔴 High', verdict: '❌ Avoid (usually)', desc: 'Losing permanent mana is rarely worth +2 Firebolt levels. Only use if Firebolt is your primary spell AND you have mana to spare.' },
+  { name: 'Glimmering Shrine', effect: 'Identifies all items in inventory', risk: 'None', verdict: '✅ Always use', desc: 'Saves gold on identify scrolls. Use when you have unidentified items.' },
+  { name: 'Gloomy Shrine', effect: '+2 AC to all equipped armor, but all equipped armor loses 20% current durability', risk: '⚠️ Medium', verdict: '⚠️ Conditional', desc: 'Good if you have high-durability items. Bad if items are nearly broken.' },
+  { name: 'Hidden Shrine', effect: 'One random equipped item gains 10 durability, others lose 10', risk: '🔴 High', verdict: '❌ Avoid', desc: 'Very likely to damage valuable equipment. Not worth the gamble.' },
+  { name: 'Holy Shrine', effect: 'Phasing — allows walking through walls temporarily', risk: 'None', verdict: '✅ Fun to use', desc: 'Walk through walls for a short time. Useful for shortcuts but wears off quickly.' },
+  { name: 'Magical Shrine', effect: 'Casts Mana Shield on you', risk: 'None', verdict: '✅ Always use', desc: 'Free Mana Shield cast. Excellent for all classes, especially early.' },
+  { name: 'Mysterious Shrine', effect: '+5 to one random attribute, -1 to all others', risk: '⚠️ Medium', verdict: '⚠️ Gamble', desc: 'Net gain of +2 stat points but randomly distributed. Usually worth it.' },
+  { name: 'Ornate Shrine', effect: '+2 to Holy Bolt, permanently lose some max Mana', risk: '🔴 High', verdict: '❌ Avoid (usually)', desc: 'Same as Fascinating but for Holy Bolt. Rarely worth the mana loss.' },
+  { name: 'Quiet Shrine', effect: '+2 Vitality', risk: 'None', verdict: '✅ Always use', desc: 'Permanent +2 Vitality. Always beneficial.' },
+  { name: 'Religious Shrine', effect: 'Fully repairs all equipped items', risk: 'None', verdict: '✅ Always use', desc: 'Free full repair. Saves gold. Always click this.' },
+  { name: 'Sacred Shrine', effect: '+2 to Charged Bolt, permanently lose some max Mana', risk: '🔴 High', verdict: '❌ Avoid (usually)', desc: 'Same deal as other spell shrines. Losing permanent mana is usually bad.' },
+  { name: 'Spiritual Shrine', effect: 'Fills all empty belt slots with gold', risk: 'None', verdict: '✅ Always use', desc: 'Free gold. Always welcome.' },
+  { name: 'Spooky Shrine', effect: 'All other players get full HP restored (multiplayer)', risk: 'None', verdict: '✅ Use in multiplayer', desc: 'Only useful in multiplayer. Heals everyone else. Coordinate with team.' },
+  { name: 'Stone Shrine', effect: 'Recharges all staves in inventory', risk: 'None', verdict: '✅ Always use', desc: 'Free recharge for all staves. Excellent for Sorcerers.' },
+  { name: 'Tainted Shrine', effect: 'One random other player gets +1 to random stat, you get -1 (multiplayer)', risk: '🔴 High', verdict: '❌ Avoid', desc: 'You lose stats. Only "useful" to grief yourself in multiplayer.' },
+  { name: 'Thaumaturgic Shrine', effect: 'All chests on current level are refilled/reset', risk: 'None', verdict: '✅ Great for farming', desc: 'Resets all chests on the level. Open all chests first, then use this shrine, then open them all again.' },
+  { name: 'Cauldron', effect: 'Random shrine effect', risk: '⚠️ Varies', verdict: '⚠️ Gamble', desc: 'Randomly applies one shrine effect. Could be great, could be terrible. Use at your own risk.' },
+  { name: 'Goat Shrine', effect: 'Random shrine effect', risk: '⚠️ Varies', verdict: '⚠️ Gamble', desc: 'Same as Cauldron — random shrine effect. Found in Catacombs.' },
+];
+
+const FOUNTAINS = [
+  { name: 'Fountain', effect: 'Restores HP', risk: 'None', verdict: '✅ Always use', desc: 'Heals you. Free healing between fights. Use as much as you want.' },
+  { name: 'Murky Pool', effect: 'Casts Infravision on you', risk: 'None', verdict: '✅ Always use', desc: 'Lets you see enemy positions. Reveals Hidden enemies. Very helpful in Catacombs.' },
+  { name: 'Purifying Spring', effect: 'Restores Mana', risk: 'None', verdict: '✅ Always use', desc: 'Free mana restoration. Use between fights to top off mana.' },
+  { name: 'Blood Fountain', effect: 'Restores 1 HP per use', risk: 'None', verdict: '✅ Slow but free', desc: 'Only restores 1 HP per click, but it\'s unlimited. Click repeatedly for free healing if you have time.' },
+  { name: 'Fountain of Tears', effect: '+1 to one stat, -1 to another (random)', risk: '⚠️ Medium', verdict: '⚠️ Gamble', desc: 'Could improve or worsen your build depending on which stats are affected. Usually worth the gamble since stats matter differently.' },
+  { name: 'Pool of Blood', effect: 'Grants temporary bonus to all damage', risk: 'None', verdict: '✅ Always use', desc: 'Temporary damage boost. Use right before engaging a tough fight.' },
+];
+
+const LEVELING_GUIDE = [
+  { charLevel: '1-4', bestArea: 'Church Levels 1-2', xpPerHour: '~500-1000', strategy: 'Kill everything in Church 1-2. Zombies and Fallen Ones give decent XP for the effort. Clear both levels, take Town Portal to town, sell items, repeat.' },
+  { charLevel: '5-8', bestArea: 'Church Levels 3-4', xpPerHour: '~1500-3000', strategy: 'Church 3-4 has higher density and better XP. Skeleton King quest gives massive XP at level 5-6. Kill all enemies, especially skeleton groups.' },
+  { charLevel: '9-12', bestArea: 'Catacombs 5-6', xpPerHour: '~3000-5000', strategy: 'Catacombs Goat Men and Acid Beasts give solid XP. These levels have good density. Use Thaumaturgic Shrine to reset chests for extra items.' },
+  { charLevel: '13-16', bestArea: 'Catacombs 7-8', xpPerHour: '~5000-8000', strategy: 'Lightning Demons and Hidden enemies give excellent XP for this range. Corridor fighting favors kiting strategies.' },
+  { charLevel: '17-20', bestArea: 'Caves 9-10', xpPerHour: '~8000-12000', strategy: 'Succubi and Balrogs give great XP. However, be prepared — Succubi Blood Stars are lethal. Stone Curse is essential. Clear room by room.' },
+  { charLevel: '21-25', bestArea: 'Caves 11-12', xpPerHour: '~12000-18000', strategy: 'Deeper caves with higher monster density. Magma Demons and Vipers. Fire resistance gear helps enormously.' },
+  { charLevel: '26-30', bestArea: 'Hell 13-14', xpPerHour: '~18000-25000', strategy: 'Blood Knights and Soul Burners. Need strong gear and spells at this point. Clear methodically, don\'t rush into rooms.' },
+  { charLevel: '30+', bestArea: 'Hell 15-16', xpPerHour: '~25000-40000+', strategy: 'Advocates and Steel Lords give the best XP in the game. Extremely dangerous but rewarding. Full endgame gear required. Repeatedly clear these levels for maximum XP.' },
+  { charLevel: 'Speed Farm', bestArea: 'Church 1-4 Reset', xpPerHour: 'Varies', strategy: 'For rapid item farming, repeatedly create new games and clear Church levels. Item drops are random on each new game creation. This is better for items than XP.' },
+];
+
+const BUILDS = {
+  warrior: [
+    { name: 'Tank Warrior', focus: 'Vitality + Stone Curse', stats: 'Enough Str for gear → rest in Vit', gear: 'Godly Plate of the Whale, Obsidian jewelry, Kings Sword of Haste',
+      strategy: 'Max survivability. Stone Curse enemies and hack them down. Mana Shield from shrine/scroll for emergencies. Stack HP and resistances.',
+      skills: 'Stone Curse (from books/scrolls), Healing, Town Portal',
+      pros: 'Nearly unkillable, massive HP pool, simple to play',
+      cons: 'Slow killing speed vs resistant enemies, mana dependent for Stone Curse' },
+    { name: 'Berserker Warrior', focus: 'Strength + Speed', stats: 'Max Str → Dex for to-hit → Vit', gear: 'Merciless or Kings weapons, speed gear, Haste suffix items',
+      strategy: 'Maximum damage output. Kill before being killed. Fast attack speed with Haste weapons. Less defensive but clears faster.',
+      skills: 'Stone Curse, Healing, Town Portal',
+      pros: 'Fastest kill speed, great for farming, satisfying gameplay',
+      cons: 'Fragile compared to tank build, requires good positioning' },
+  ],
+  rogue: [
+    { name: 'Archer Rogue', focus: 'Dexterity + Range', stats: 'Max Dex → Mag for Stone Curse → Vit', gear: 'Emerald/Merciless bow of speed/bear, Obsidian armor',
+      strategy: 'Classic kiting build. Stay at max range, pepper enemies with arrows. Use Stone Curse on dangerous targets. Doorway camping when possible.',
+      skills: 'Stone Curse, Healing, Town Portal, Fireball for groups',
+      pros: 'Safest playstyle, rarely takes damage, excellent at kiting',
+      cons: 'Struggles in tight spaces, slower single-target than Warrior' },
+    { name: 'Battle Mage Rogue', focus: 'Magic + Dex hybrid', stats: 'Dex for bow → heavy Mag investment → Vit', gear: 'Magic-boosting jewelry, decent bow, Thinking Cap',
+      strategy: 'Hybrid approach using both bow and spells. Fireball and Chain Lightning supplement bow damage. More versatile but less specialized.',
+      skills: 'Fireball, Chain Lightning, Stone Curse, Teleport',
+      pros: 'Extremely versatile, handles all situations, element flexibility',
+      cons: 'Jack of all trades, master of none. Needs careful stat balancing' },
+  ],
+  sorcerer: [
+    { name: 'Chain Lightning Sorc', focus: 'Magic + Mana Shield', stats: 'All into Magic, minimum Str for gear', gear: 'Thinking Cap, Dreamflange, Naj\'s Light Plate, max Magic jewelry',
+      strategy: 'The standard Sorcerer build. Mana Shield for survival, Chain Lightning for everything else. Teleport for positioning. Massive mana pool makes Mana Shield incredibly effective.',
+      skills: 'Chain Lightning, Mana Shield, Teleport, Stone Curse, Town Portal',
+      pros: 'Highest damage output in game, excellent AoE, nearly unkillable with Mana Shield',
+      cons: 'Lightning immunes require backup (Fireball), mana potion dependent' },
+    { name: 'Fire Sorc', focus: 'Magic + Fire spells', stats: 'All into Magic', gear: 'Same as above, fire spell books',
+      strategy: 'Fireball + Fire Wall + Guardian for fire damage. Works great in Church and Catacombs but struggles in Caves/Hell where fire resist is common.',
+      skills: 'Fireball, Fire Wall, Guardian, Mana Shield, Teleport',
+      pros: 'Excellent single target, great area denial with Fire Wall',
+      cons: 'Many late-game enemies resist or immune to fire, less versatile' },
+  ],
+};
+
+const STRATEGIES = [
+  { scenario: 'Fighting The Butcher', difficulty: 'Medium', classes: 'All',
+    strategy: 'The Butcher charges immediately when his room opens. Best approach: open the door, immediately run north to the staircase. Go to town, come back through the portal, and he\'ll be stuck at the stairs. Attack through the doorway or use ranged attacks. Warriors can also simply face-tank him with enough HP (60+) and healing potions. Rogues should kite him around pillars. Sorcerers can Firewall the doorway.',
+    gear: 'Any weapon with decent damage. Have 3+ healing potions minimum.' },
+  { scenario: 'Skeleton King Fight', difficulty: 'Medium', classes: 'All',
+    strategy: 'Leoric summons skeletons constantly. Ignore the adds and focus all damage on the King. Holy Bolt is extremely effective since he\'s undead. Warriors should corner him and swing. Rogues can kite while shooting. He\'s immune to Magic damage type — use Fire, Lightning, Holy Bolt, or physical.',
+    gear: 'Anti-undead weapons if available. Holy Bolt scrolls are sold by Adria.' },
+  { scenario: 'Handling Succubi Packs', difficulty: 'Very Hard', classes: 'All',
+    strategy: 'Succubi fire Blood Stars that home in and deal massive damage. Never fight more than 2-3 at once. Use doorways and corners to break line of sight. Stone Curse the first one you see, kill it, repeat. Warriors should have ranged option (bow) to lure singles. Sorcerers can Teleport behind them for surprise Chain Lightning. Fire resistance helps but Blood Star is magic damage.',
+    gear: 'Obsidian resist gear. Stone Curse spell or scrolls. Full Rejuvenation potions.' },
+  { scenario: 'Blood Knight Corridors', difficulty: 'Very Hard', classes: 'All',
+    strategy: 'Blood Knights are fast, hit hard, and resist Fire + Lightning. Physical damage is king here. Warriors thrive — Stone Curse and melee. Rogues need a strong bow and should kite in long hallways. Sorcerers use Stone Curse + melee (even with low Str, petrified enemies take massive bonus). Never fight more than 2 at once.',
+    gear: 'High physical damage weapons. Resistance gear. Life leech if available.' },
+  { scenario: 'Dealing with Lightning Immunes', difficulty: 'Hard', classes: 'Sorcerer',
+    strategy: 'Soul Burners and Advocates are immune to Lightning — your primary damage. Switch to Fireball for Soul Burners. For Advocates (who resist Fire too), use Stone Curse + melee, or Bone Spirit for percentage-based damage. Always have a backup element.',
+    gear: 'Keep fire spell books leveled. Stone Curse scrolls as backup.' },
+  { scenario: 'The Diablo Fight', difficulty: 'Extreme', classes: 'All',
+    strategy: 'Clear ALL monsters on level 16 first. Diablo has 1666 HP, triple resists (Fire/Lightning/Magic), and casts Apocalypse which hits the entire screen. Approach: Stone Curse him, melee him during petrify, run away when it wears off, repeat. Sorcerers: Mana Shield + Chain Lightning while dodging. Rogues: kite in the large room, using pillars for cover. Bring 8+ Full Rejuvenation potions. Town Portal ready at all times.',
+    gear: 'Best weapon available. Max resistances. Full Rejuvenation potions. Town Portal scrolls.' },
+  { scenario: 'Early Game Poverty (Levels 1-5)', difficulty: 'Easy', classes: 'All',
+    strategy: 'Money is tight early. Don\'t buy everything — prioritize: 1) Town Portal scrolls 2) Healing potions 3) One good weapon. Sell all blue items you don\'t need. Use fountains for free healing. Don\'t repair items until they\'re nearly broken. Adria sells spell books — buy Stone Curse and Healing when available.',
+    gear: 'Use whatever drops. Short Sword → upgrade when you find better.' },
+  { scenario: 'Multiplayer Etiquette & Strategy', difficulty: 'N/A', classes: 'All',
+    strategy: 'In multiplayer: Warriors tank front line, Rogues cover from range, Sorcerers nuke and support. Share healing duties. Don\'t steal loot — communicate who needs what. Use Heal Other on the tank. Town Portal is shared — don\'t block it. Watch for PKers (player killers) in public games.',
+    gear: 'Coordinate gear distribution based on class needs.' },
+  { scenario: 'Item Farming Routes', difficulty: 'Varies', classes: 'All',
+    strategy: 'Best farming method: restart game, clear specific levels. Church 4 for early uniques. Caves 9-12 for mid-tier. Hell 15-16 for endgame. Prioritize unique and champion monster packs — they drop better loot. Wirt sells expensive but sometimes amazing items — check him every game.',
+    gear: 'Magic Find doesn\'t exist in D1 — drops are purely random based on monster level.' },
+];
+
+const RESISTANCE_GUIDE = {
+  overview: 'In Diablo 1, enemies can Resist or be Immune to three damage types: Fire, Lightning, and Magic. Physical damage has no resist/immunity system — it always works. This makes understanding resistances crucial for spell-heavy classes.',
+  types: [
+    { type: 'Fire', color: 'fire', desc: 'Resisted by: Balrogs, Blood Knights, Soul Burners, Advocates, Steel Lords, Diablo. Fire-resistant enemies take roughly half damage from fire spells.' },
+    { type: 'Lightning', color: 'lightning', desc: 'Immune: Soul Burners, Advocates. Resisted by: Blood Knights, Steel Lords, Diablo. Lightning immunity means zero damage from all lightning spells.' },
+    { type: 'Magic', color: 'magic', desc: 'Immune: All Skeletons, Magma Demons. Resisted by: Succubi, Vipers, Advocates, Steel Lords, Diablo. This covers spells typed as "Magic" — Stone Curse, Holy Bolt, Bone Spirit, etc.' },
+  ],
+  tips: [
+    'Physical damage bypasses all resistances — it always works at full effect.',
+    'Stone Curse works on almost every enemy regardless of immunities (it has special resistance handling).',
+    'Sorcerers MUST have at least two damage elements leveled (typically Chain Lightning + Fireball).',
+    'When facing triple-resist enemies (Steel Lords, Diablo), physical damage or Stone Curse + melee is the answer.',
+    'Holy Bolt only damages undead but ignores their normal resistances — it\'s typed specially.',
+    'Bone Spirit deals percentage-based Magic damage — great against high HP targets but fails vs Magic immunes.',
+  ],
+  monsterTable: [
+    { monster: 'Skeletons (all)', fire: '—', lightning: '—', magic: 'IMMUNE', best: 'Fire, Lightning, Physical' },
+    { monster: 'Magma Demons', fire: 'Resist', lightning: '—', magic: 'IMMUNE', best: 'Lightning, Physical' },
+    { monster: 'Succubi', fire: '—', lightning: '—', magic: 'Resist', best: 'Fire, Lightning, Physical' },
+    { monster: 'Balrogs', fire: 'Resist', lightning: '—', magic: '—', best: 'Lightning, Physical' },
+    { monster: 'Blood Knights', fire: 'Resist', lightning: 'Resist', magic: '—', best: 'Physical, Magic' },
+    { monster: 'Soul Burners', fire: 'Resist', lightning: 'IMMUNE', magic: '—', best: 'Fire, Physical, Magic' },
+    { monster: 'Advocates', fire: 'Resist', lightning: 'IMMUNE', magic: 'Resist', best: 'Physical (primary)' },
+    { monster: 'Steel Lords', fire: 'Resist', lightning: 'Resist', magic: 'Resist', best: 'Physical (primary)' },
+    { monster: 'Diablo', fire: 'Resist', lightning: 'Resist', magic: 'Resist', best: 'Physical + Stone Curse' },
+    { monster: 'Vipers', fire: '—', lightning: '—', magic: 'Resist', best: 'Fire, Lightning, Physical' },
+  ],
+};
+
+const TIPS = [
+  { category: 'Combat', tips: [
+    'Always fight in doorways — only one enemy can swing at you at a time.',
+    'Hold Shift to attack without moving. Essential for hitting enemies at the edge of your range.',
+    'Running away makes you unable to block. Walk backwards instead when retreating.',
+    'Stone Curse is the most powerful spell for ALL classes. Even Warriors should use it.',
+    'You can stunlock enemies with fast attack weapons — they can\'t hit back if your attacks are fast enough.',
+    'Enemies have a hit recovery animation. Faster weapons keep them in this state permanently.',
+  ]},
+  { category: 'Items & Economy', tips: [
+    'Check Griswold and Adria every time you go to town — their inventory resets when you enter a new dungeon level.',
+    'Wirt always sells one premium item. It\'s expensive but can be the best item available.',
+    'Items on the ground disappear when you change levels. Pick up everything you want to sell.',
+    'Identify scrolls are cheap — ID everything before selling for maximum gold.',
+    'Potions of Full Rejuvenation are the most valuable consumable — hoard them for boss fights.',
+    'Elixirs permanently boost stats — always use them. They\'re rare drops in later levels.',
+  ]},
+  { category: 'Exploration', tips: [
+    'Map is revealed permanently per character. Use this to plan routes.',
+    'Always check for hidden rooms — some walls can be opened by clicking on them or using levers.',
+    'Shrines with known positive effects should always be used. Memorize the safe ones.',
+    'Thaumaturgic Shrine resets all chests on the level — open all chests first, THEN use the shrine.',
+    'Book stands can teach spells permanently — they\'re more valuable than most item drops.',
+    'Each game generates a random dungeon layout but quest locations are predetermined by level.',
+  ]},
+  { category: 'Survival', tips: [
+    'Always have a Town Portal scroll or the spell ready. Getting trapped without one is death.',
+    'Fill your belt with healing potions. Full Rejuv potions for emergencies.',
+    'Never explore with low health — one wrong corner can end your run.',
+    'Listen for enemy sounds — you can hear monsters before you see them.',
+    'If you die, your items drop on the ground. You can retrieve them with a new character, or reload save.',
+    'Save before exploring a new level. The game has permadeath-adjacent stakes.',
+  ]},
+  { category: 'Advanced', tips: [
+    'The "1-frame melee" glitch: If you click to attack and immediately click to walk, you can cancel the backswing animation for much faster attacks.',
+    'Town portal duping: some versions allow item duplication via town portal. Considered a bug/exploit.',
+    'Monster AI is simple — they walk directly toward you. Use this to create corridors of death with Fire Wall.',
+    'Each spell has a breakpoint system — higher spell level doesn\'t always mean proportionally more damage.',
+    'The Enchanted Shrine exploit: save before using it. If your main spell gets reduced, reload.',
+    'Max character level is 50, but most content is clearable by 30-35 with good gear.',
+  ]},
+];
+
+// ─── RENDER ENGINE ───
+
+let currentPage = 'charbuilder';
+let currentSubTab = {};
+let searchFilter = '';
+
+function renderSidebar() {
+  const nav = document.getElementById('sidebar-nav');
+  nav.innerHTML = NAV.map(item => {
+    if (item.section) return `<div class="nav-section">${item.section}</div>`;
+    return `<div class="nav-item ${currentPage === item.id ? 'active' : ''}" onclick="navigate('${item.id}')">
+      <span class="nav-icon">${item.icon}</span>
+      <span>${item.label}</span>
+    </div>`;
+  }).join('');
+}
+
+function navigate(page) {
+  currentPage = page;
+  searchFilter = '';
+  document.getElementById('search-box').value = '';
+  renderSidebar();
+  renderContent();
+}
+
+function renderContent() {
+  const title = NAV.find(n => n.id === currentPage)?.label || 'Codex';
+  document.getElementById('page-title').textContent = title;
+  const el = document.getElementById('content');
+  el.scrollTop = 0;
+
+  const renderers = {
+    classes: renderClasses,
+    levels: renderLevels,
+    monsters: renderMonsters,
+    items: renderItems,
+    uniques: renderUniques,
+    spells: renderSpells,
+    quests: renderQuests,
+    shrines: renderShrines,
+    fountains: renderFountains,
+    leveling: renderLeveling,
+    builds: renderBuilds,
+    strategies: renderStrategies,
+    resistances: renderResistances,
+    tips: renderTips,
+    charbuilder: renderCharBuilder,
+  };
+
+  el.innerHTML = (renderers[currentPage] || (() => '<p>Page not found.</p>'))();
+}
+
+function statBar(label, value, max, color) {
+  const pct = Math.round((value / max) * 100);
+  return `<div class="stat-bar-wrap">
+    <div class="stat-bar-label"><span>${label}</span><span>${value}/${max}</span></div>
+    <div class="stat-bar"><div class="stat-bar-fill" style="width:${pct}%;background:${color}"></div></div>
+  </div>`;
+}
+
+function renderClasses() {
+  const keys = Object.keys(CLASSES);
+  const tab = currentSubTab.classes || keys[0];
+  const c = CLASSES[tab];
+
+  return `
+    <div class="tab-bar">
+      ${keys.map(k => `<div class="tab ${tab === k ? 'active' : ''}" onclick="setSubTab('classes','${k}')">${CLASSES[k].icon} ${CLASSES[k].name}</div>`).join('')}
+    </div>
+    <div class="detail-panel">
+      <div>
+        <div class="info-block">
+          <div class="card-title">${c.icon} ${c.name}</div>
+          <p>${c.desc}</p>
+        </div>
+        <div class="section-header">Base Stats</div>
+        <div class="info-block">
+          ${statBar('Strength', c.baseStats.str, 50, '#c9a84c')}
+          ${statBar('Magic', c.baseStats.mag, 50, '#7b68ee')}
+          ${statBar('Dexterity', c.baseStats.dex, 50, '#44bb44')}
+          ${statBar('Vitality', c.baseStats.vit, 50, '#d44')}
+        </div>
+        <div class="section-header">Max Stats</div>
+        <div class="info-block">
+          ${statBar('Strength', c.maxStats.str, 250, '#c9a84c')}
+          ${statBar('Magic', c.maxStats.mag, 250, '#7b68ee')}
+          ${statBar('Dexterity', c.maxStats.dex, 250, '#44bb44')}
+          ${statBar('Vitality', c.maxStats.vit, 250, '#d44')}
+        </div>
+        <div class="section-header">Per Level Gains</div>
+        <div class="info-block">
+          <p>+${c.perLevel.life} Life per level &nbsp;|&nbsp; +${c.perLevel.mana} Mana per level</p>
+          <p>Starting Life: ${c.startLife} &nbsp;|&nbsp; Starting Mana: ${c.startMana}</p>
+        </div>
+      </div>
+      <div>
+        <div class="section-header">Class Skill</div>
+        <div class="info-block"><p>${c.skills}</p></div>
+        <div class="section-header">Recommended Gear</div>
+        <div class="info-block"><p>${c.bestGear}</p></div>
+        <div class="section-header">Weaknesses</div>
+        <div class="warning">${c.weaknesses}</div>
+        <div class="section-header">Pro Tips</div>
+        ${c.tips.map(t => `<div class="tip">${t}</div>`).join('')}
+      </div>
+    </div>`;
+}
+
+function renderLevels() {
+  return `
+    <div class="card-grid">
+      ${DUNGEON_LEVELS.map(l => `
+        <div class="card">
+          <div class="card-title">🏰 ${l.name}</div>
+          <div class="card-subtitle">Levels ${l.level} &nbsp;·&nbsp; Monster Level ${l.mlvl} &nbsp;·&nbsp; <span class="badge badge-${l.difficulty === 'Easy' ? 'green' : l.difficulty === 'Moderate' ? 'blue' : l.difficulty === 'Hard' ? 'fire' : 'red'}">${l.difficulty}</span></div>
+          <p style="margin:8px 0">${l.desc}</p>
+          <p style="font-size:13px;color:var(--text-dim)"><strong style="color:var(--gold-dim)">Monsters:</strong> ${l.monsters}</p>
+          <div class="tip">${l.tips}</div>
+        </div>
+      `).join('')}
+    </div>`;
+}
+
+function renderMonsters() {
+  let filtered = MONSTERS;
+  if (searchFilter) {
+    const q = searchFilter.toLowerCase();
+    filtered = MONSTERS.filter(m => m.name.toLowerCase().includes(q) || m.area.toLowerCase().includes(q) || m.type.toLowerCase().includes(q));
+  }
+
+  return `
+    <p style="margin-bottom:16px;color:var(--text-dim)">Showing ${filtered.length} monsters. Use the search box to filter by name, area, or type.</p>
+    <table class="data-table">
+      <tr><th>Monster</th><th>Area</th><th>HP</th><th>Damage</th><th>XP</th><th>Resist</th><th>Immune</th><th>Tips</th></tr>
+      ${filtered.map(m => `
+        <tr>
+          <td><strong style="color:var(--text-bright)">${m.name}</strong><br><span style="font-size:12px;color:var(--text-dim)">${m.type}</span></td>
+          <td>${m.area}</td>
+          <td>${m.hp}</td>
+          <td>${m.dmg}</td>
+          <td>${m.xp}</td>
+          <td>${m.resist === 'None' ? '<span style="color:var(--text-dim)">—</span>' : `<span style="color:var(--fire)">${m.resist}</span>`}</td>
+          <td>${m.immune === 'None' ? '<span style="color:var(--text-dim)">—</span>' : `<span class="badge badge-red">${m.immune}</span>`}</td>
+          <td style="font-size:13px;max-width:200px">${m.tips}</td>
+        </tr>
+      `).join('')}
+    </table>`;
+}
+
+function renderItems() {
+  return `
+    <div class="section-header">Item Quality Tiers</div>
+    <div class="card-grid">
+      <div class="card">
+        <div class="card-title" style="color:#888">⚪ Normal Items</div>
+        <p>Basic items with no magic properties. Sell these for gold or use as placeholders until you find magic gear.</p>
+      </div>
+      <div class="card">
+        <div class="card-title" style="color:var(--blue-bright)">🔵 Magic Items</div>
+        <p>Items with 1-2 random affixes (prefix and/or suffix). The backbone of your gear. Examples: "King's Sword of Haste" or "Obsidian Shield of the Tiger".</p>
+      </div>
+      <div class="card">
+        <div class="card-title" style="color:var(--unique)">🟡 Unique Items</div>
+        <p>Named items with fixed special properties. Some are best-in-slot, others are mediocre. See the Unique Items page for the full list.</p>
+      </div>
+    </div>
+
+    <div class="section-header">Best Prefixes</div>
+    <table class="data-table">
+      <tr><th>Prefix</th><th>Effect</th><th>Best For</th></tr>
+      <tr><td style="color:var(--gold)">King's</td><td>+Damage, +% To Hit</td><td>Warriors — best weapon prefix</td></tr>
+      <tr><td style="color:var(--gold)">Godly</td><td>+Max AC</td><td>Warriors — best armor prefix</td></tr>
+      <tr><td style="color:var(--gold)">Obsidian</td><td>+All Resistances</td><td>ALL classes — essential for Hell</td></tr>
+      <tr><td style="color:var(--gold)">Merciless</td><td>+Max Damage</td><td>Rogues, Warriors — raw DPS</td></tr>
+      <tr><td style="color:var(--gold)">Emerald</td><td>+High Resist All</td><td>All classes — excellent resist gear</td></tr>
+      <tr><td style="color:var(--gold)">Valiant</td><td>+% Resist All</td><td>Solid budget resist option</td></tr>
+    </table>
+
+    <div class="section-header">Best Suffixes</div>
+    <table class="data-table">
+      <tr><th>Suffix</th><th>Effect</th><th>Best For</th></tr>
+      <tr><td style="color:var(--gold)">of the Whale</td><td>+Max HP</td><td>Warriors — survivability</td></tr>
+      <tr><td style="color:var(--gold)">of the Zodiac</td><td>+All Attributes</td><td>ALL classes — universally great</td></tr>
+      <tr><td style="color:var(--gold)">of Haste</td><td>Fast Attack Speed</td><td>Warriors — DPS with swords</td></tr>
+      <tr><td style="color:var(--gold)">of the Tiger</td><td>+High HP</td><td>All classes — good HP boost</td></tr>
+      <tr><td style="color:var(--gold)">of the Bear</td><td>+High HP</td><td>All classes — mid-tier HP</td></tr>
+      <tr><td style="color:var(--gold)">of Sorcery</td><td>+Magic</td><td>Sorcerers — more spell power</td></tr>
+    </table>
+
+    <div class="section-header">Optimal Gear Combinations</div>
+    <div class="card-grid">
+      <div class="card">
+        <div class="card-title">⚔️ Warrior BiS</div>
+        <p><strong style="color:var(--gold)">Weapon:</strong> King's Sword of Haste</p>
+        <p><strong style="color:var(--gold)">Armor:</strong> Godly Plate of the Whale</p>
+        <p><strong style="color:var(--gold)">Helm:</strong> Harlequin Crest or Gotterdamerung</p>
+        <p><strong style="color:var(--gold)">Shield:</strong> Obsidian Shield of the Tiger</p>
+        <p><strong style="color:var(--gold)">Jewelry:</strong> Obsidian of the Zodiac (both slots)</p>
+      </div>
+      <div class="card">
+        <div class="card-title">🏹 Rogue BiS</div>
+        <p><strong style="color:var(--gold)">Weapon:</strong> Emerald Bow of the Bear / Windforce</p>
+        <p><strong style="color:var(--gold)">Armor:</strong> Obsidian Plate of the Zodiac</p>
+        <p><strong style="color:var(--gold)">Helm:</strong> Harlequin Crest or Thinking Cap</p>
+        <p><strong style="color:var(--gold)">Jewelry:</strong> Obsidian of the Zodiac + Dex jewelry</p>
+      </div>
+      <div class="card">
+        <div class="card-title">🔮 Sorcerer BiS</div>
+        <p><strong style="color:var(--gold)">Weapon:</strong> Dreamflange / Staff with high charges</p>
+        <p><strong style="color:var(--gold)">Armor:</strong> Naj's Light Plate</p>
+        <p><strong style="color:var(--gold)">Helm:</strong> Thinking Cap</p>
+        <p><strong style="color:var(--gold)">Shield:</strong> Obsidian of the Zodiac</p>
+        <p><strong style="color:var(--gold)">Jewelry:</strong> Obsidian of the Zodiac (max Magic)</p>
+      </div>
+    </div>`;
+}
+
+function renderUniques() {
+  return `
+    <p style="margin-bottom:16px;color:var(--text-dim)">Unique items have fixed properties and drop from specific sources or randomly from high-level monsters.</p>
+    <table class="data-table">
+      <tr><th>Item</th><th>Type</th><th>Requirement</th><th>Damage/AC</th><th>Special Properties</th><th>Source</th></tr>
+      ${UNIQUE_ITEMS.map(i => `
+        <tr>
+          <td><strong style="color:${i.tier === 'unique' ? 'var(--unique)' : 'var(--blue-bright)'}">${i.name}</strong></td>
+          <td>${i.type}</td>
+          <td>${i.req}</td>
+          <td>${i.damage || i.ac || '—'}</td>
+          <td style="font-size:13px">${i.special}</td>
+          <td style="font-size:13px;color:var(--text-dim)">${i.how}</td>
+        </tr>
+      `).join('')}
+    </table>`;
+}
+
+function renderSpells() {
+  const types = ['All', 'Fire', 'Lightning', 'Magic'];
+  const tab = currentSubTab.spells || 'All';
+  let filtered = SPELLS;
+  if (tab !== 'All') filtered = SPELLS.filter(s => s.type === tab);
+  if (searchFilter) {
+    const q = searchFilter.toLowerCase();
+    filtered = filtered.filter(s => s.name.toLowerCase().includes(q) || s.desc.toLowerCase().includes(q));
+  }
+
+  return `
+    <div class="tab-bar">
+      ${types.map(t => `<div class="tab ${tab === t ? 'active' : ''}" onclick="setSubTab('spells','${t}')">${t === 'Fire' ? '🔥' : t === 'Lightning' ? '⚡' : t === 'Magic' ? '✨' : '📖'} ${t}</div>`).join('')}
+    </div>
+    <div class="card-grid">
+      ${filtered.map(s => `
+        <div class="card">
+          <div class="card-title">
+            <span class="badge badge-${s.type === 'Fire' ? 'fire' : s.type === 'Lightning' ? 'lightning' : 'magic'}">${s.type}</span>
+            ${s.name}
+          </div>
+          <div class="card-subtitle">Min Magic: ${s.minMag} · Mana: ${s.manaCost} · Source: ${s.source}</div>
+          <p style="margin:6px 0">${s.desc}</p>
+          <div class="tip">${s.tip}</div>
+        </div>
+      `).join('')}
+    </div>`;
+}
+
+function renderQuests() {
+  return `
+    <p style="margin-bottom:16px;color:var(--text-dim)">Quests are randomly selected each new game (except The Butcher and Diablo which always appear). Not all quests appear in every playthrough.</p>
+    ${QUESTS.map(q => `
+      <div class="card" style="margin-bottom:12px">
+        <div class="card-title">📜 ${q.name}</div>
+        <div class="card-subtitle">${q.level} · Trigger: ${q.trigger}</div>
+        <p style="margin:8px 0">${q.desc}</p>
+        <p style="margin:6px 0"><strong style="color:var(--gold-dim)">Reward:</strong> ${q.reward}</p>
+        <div class="tip"><strong>Strategy:</strong> ${q.strategy}</div>
+      </div>
+    `).join('')}`;
+}
+
+function renderShrines() {
+  const verdicts = ['All', '✅ Safe', '⚠️ Risky', '❌ Avoid'];
+  const tab = currentSubTab.shrines || 'All';
+  let filtered = SHRINES;
+  if (tab === '✅ Safe') filtered = SHRINES.filter(s => s.verdict.startsWith('✅'));
+  else if (tab === '⚠️ Risky') filtered = SHRINES.filter(s => s.verdict.startsWith('⚠️'));
+  else if (tab === '❌ Avoid') filtered = SHRINES.filter(s => s.verdict.startsWith('❌'));
+
+  return `
+    <div class="tab-bar">
+      ${verdicts.map(v => `<div class="tab ${tab === v ? 'active' : ''}" onclick="setSubTab('shrines','${v}')">${v}</div>`).join('')}
+    </div>
+    <table class="data-table">
+      <tr><th>Shrine</th><th>Effect</th><th>Risk</th><th>Verdict</th><th>Details</th></tr>
+      ${filtered.map(s => `
+        <tr>
+          <td><strong style="color:var(--text-bright)">${s.name}</strong></td>
+          <td>${s.effect}</td>
+          <td>${s.risk}</td>
+          <td>${s.verdict}</td>
+          <td style="font-size:13px;max-width:250px">${s.desc}</td>
+        </tr>
+      `).join('')}
+    </table>`;
+}
+
+function renderFountains() {
+  return `
+    <p style="margin-bottom:16px;color:var(--text-dim)">Fountains and pools provide various effects when clicked. Most are beneficial — learn which ones to always use.</p>
+    <div class="card-grid">
+      ${FOUNTAINS.map(f => `
+        <div class="card">
+          <div class="card-title">💧 ${f.name}</div>
+          <p><strong style="color:var(--gold-dim)">Effect:</strong> ${f.effect}</p>
+          <p><strong style="color:var(--gold-dim)">Verdict:</strong> ${f.verdict}</p>
+          <p style="margin-top:6px;font-size:14px">${f.desc}</p>
+        </div>
+      `).join('')}
+    </div>`;
+}
+
+function renderLeveling() {
+  return `
+    <p style="margin-bottom:16px">This guide shows the best areas to farm XP at each character level range, with estimated XP per hour and strategies for efficient leveling.</p>
+    <table class="data-table">
+      <tr><th>Char Level</th><th>Best Area</th><th>Est. XP/Hour</th><th>Strategy</th></tr>
+      ${LEVELING_GUIDE.map(l => `
+        <tr>
+          <td><strong style="color:var(--gold)">${l.charLevel}</strong></td>
+          <td>${l.bestArea}</td>
+          <td>${l.xpPerHour}</td>
+          <td style="font-size:13px;max-width:350px">${l.strategy}</td>
+        </tr>
+      `).join('')}
+    </table>
+
+    <div class="section-header">General Leveling Tips</div>
+    <div class="tip">Kill EVERYTHING. Unlike later ARPGs, Diablo 1 rewards full clears over speed runs for XP purposes.</div>
+    <div class="tip">Quest completions give large one-time XP bonuses. Always complete available quests before moving on.</div>
+    <div class="tip">Elixirs that drop in later levels permanently boost stats — don't skip any enemies that might drop them.</div>
+    <div class="tip">After level 30, the XP curve flattens significantly. Levels 30-50 take a very long time. Focus on gear at this point.</div>
+    <div class="warning">XP penalty applies when fighting enemies much lower level than you. Don't grind Church levels at level 25+.</div>`;
+}
+
+function renderBuilds() {
+  const classes = ['warrior', 'rogue', 'sorcerer'];
+  const tab = currentSubTab.builds || 'warrior';
+
+  return `
+    <div class="tab-bar">
+      ${classes.map(c => `<div class="tab ${tab === c ? 'active' : ''}" onclick="setSubTab('builds','${c}')">${CLASSES[c].icon} ${CLASSES[c].name}</div>`).join('')}
+    </div>
+    <div class="card-grid">
+      ${BUILDS[tab].map(b => `
+        <div class="card">
+          <div class="card-title">${CLASSES[tab].icon} ${b.name}</div>
+          <div class="card-subtitle">Focus: ${b.focus}</div>
+          <p style="margin:8px 0"><strong style="color:var(--gold-dim)">Stat Priority:</strong> ${b.stats}</p>
+          <p style="margin:6px 0"><strong style="color:var(--gold-dim)">Key Skills:</strong> ${b.skills}</p>
+          <p style="margin:6px 0"><strong style="color:var(--gold-dim)">Best Gear:</strong> ${b.gear}</p>
+          <p style="margin:8px 0">${b.strategy}</p>
+          <div style="display:flex;gap:8px;margin-top:8px">
+            <span class="badge badge-green">✓ ${b.pros}</span>
+          </div>
+          <div style="margin-top:6px">
+            <span class="badge badge-red">✗ ${b.cons}</span>
+          </div>
+        </div>
+      `).join('')}
+    </div>`;
+}
+
+function renderStrategies() {
+  return `
+    <p style="margin-bottom:16px;color:var(--text-dim)">Detailed strategies for common and challenging scenarios you'll encounter in the labyrinth beneath Tristram.</p>
+    ${STRATEGIES.map(s => `
+      <div class="card" style="margin-bottom:12px">
+        <div class="card-title">
+          🗡️ ${s.scenario}
+          <span class="badge badge-${s.difficulty === 'Easy' ? 'green' : s.difficulty === 'Medium' ? 'blue' : s.difficulty === 'Hard' ? 'fire' : s.difficulty === 'Very Hard' ? 'red' : s.difficulty === 'Extreme' ? 'red' : 'magic'}">${s.difficulty}</span>
+        </div>
+        <div class="card-subtitle">Classes: ${s.classes}</div>
+        <p style="margin:10px 0">${s.strategy}</p>
+        <p style="margin:6px 0;font-size:13px"><strong style="color:var(--gold-dim)">Recommended Gear:</strong> ${s.gear}</p>
+      </div>
+    `).join('')}`;
+}
+
+function renderResistances() {
+  const rg = RESISTANCE_GUIDE;
+  return `
+    <div class="info-block"><p>${rg.overview}</p></div>
+
+    <div class="section-header">Damage Types</div>
+    <div class="card-grid">
+      ${rg.types.map(t => `
+        <div class="card">
+          <div class="card-title"><span class="badge badge-${t.color}">${t.type}</span></div>
+          <p>${t.desc}</p>
+        </div>
+      `).join('')}
+    </div>
+
+    <div class="section-header">Monster Resistance Table</div>
+    <table class="data-table">
+      <tr><th>Monster</th><th>🔥 Fire</th><th>⚡ Lightning</th><th>✨ Magic</th><th>Best Damage Type</th></tr>
+      ${rg.monsterTable.map(m => `
+        <tr>
+          <td><strong style="color:var(--text-bright)">${m.monster}</strong></td>
+          <td>${m.fire === 'IMMUNE' ? '<span class="badge badge-red">IMMUNE</span>' : m.fire === 'Resist' ? '<span style="color:var(--fire)">Resist</span>' : '<span style="color:var(--text-dim)">—</span>'}</td>
+          <td>${m.lightning === 'IMMUNE' ? '<span class="badge badge-red">IMMUNE</span>' : m.lightning === 'Resist' ? '<span style="color:var(--lightning)">Resist</span>' : '<span style="color:var(--text-dim)">—</span>'}</td>
+          <td>${m.magic === 'IMMUNE' ? '<span class="badge badge-red">IMMUNE</span>' : m.magic === 'Resist' ? '<span style="color:var(--magic)">Resist</span>' : '<span style="color:var(--text-dim)">—</span>'}</td>
+          <td style="color:var(--green)">${m.best}</td>
+        </tr>
+      `).join('')}
+    </table>
+
+    <div class="section-header">Key Resistance Tips</div>
+    ${rg.tips.map(t => `<div class="tip">${t}</div>`).join('')}`;
+}
+
+function renderTips() {
+  return TIPS.map(cat => `
+    <div class="section-header">${cat.category}</div>
+    ${cat.tips.map(t => `<div class="tip">${t}</div>`).join('')}
+  `).join('');
+}
+
+// ─── CHARACTER BUILDER ───
+
+const EQUIPMENT_DB = [
+  // ─ WEAPONS ─
+  { id:'w1', slot:'weapon', name:'Short Sword', tier:'normal', damage:'2-6', str:0, mag:0, dex:0, vit:0, ac:0, hp:0, mana:0, resAll:0, toHit:0, spellLvl:0, atkSpd:'Normal', note:'' },
+  { id:'w2', slot:'weapon', name:'Long Sword', tier:'normal', damage:'4-12', str:0, mag:0, dex:0, vit:0, ac:0, hp:0, mana:0, resAll:0, toHit:0, spellLvl:0, atkSpd:'Normal', note:'' },
+  { id:'w3', slot:'weapon', name:'Broad Sword', tier:'normal', damage:'4-12', str:0, mag:0, dex:0, vit:0, ac:0, hp:0, mana:0, resAll:0, toHit:0, spellLvl:0, atkSpd:'Normal', note:'' },
+  { id:'w4', slot:'weapon', name:'Great Sword', tier:'normal', damage:'6-16', str:0, mag:0, dex:0, vit:0, ac:0, hp:0, mana:0, resAll:0, toHit:0, spellLvl:0, atkSpd:'Slow', note:'Two-handed' },
+  { id:'w5', slot:'weapon', name:'Mace', tier:'normal', damage:'1-8', str:0, mag:0, dex:0, vit:0, ac:0, hp:0, mana:0, resAll:0, toHit:0, spellLvl:0, atkSpd:'Normal', note:'' },
+  { id:'w6', slot:'weapon', name:'War Hammer', tier:'normal', damage:'5-14', str:0, mag:0, dex:0, vit:0, ac:0, hp:0, mana:0, resAll:0, toHit:0, spellLvl:0, atkSpd:'Slow', note:'' },
+  { id:'w7', slot:'weapon', name:'Short Bow', tier:'normal', damage:'1-4', str:0, mag:0, dex:0, vit:0, ac:0, hp:0, mana:0, resAll:0, toHit:0, spellLvl:0, atkSpd:'Normal', note:'Ranged' },
+  { id:'w8', slot:'weapon', name:'Long War Bow', tier:'normal', damage:'1-14', str:0, mag:0, dex:0, vit:0, ac:0, hp:0, mana:0, resAll:0, toHit:0, spellLvl:0, atkSpd:'Normal', note:'Ranged' },
+  { id:'w9', slot:'weapon', name:'Short Staff', tier:'normal', damage:'2-4', str:0, mag:0, dex:0, vit:0, ac:0, hp:0, mana:0, resAll:0, toHit:0, spellLvl:0, atkSpd:'Normal', note:'' },
+  { id:'w10', slot:'weapon', name:"King's Sword of Haste", tier:'magic', damage:'8-16', str:0, mag:0, dex:0, vit:0, ac:0, hp:0, mana:0, resAll:0, toHit:50, spellLvl:0, atkSpd:'Fast', note:'+Dmg, +50% ToHit, Fast attack' },
+  { id:'w11', slot:'weapon', name:'Merciless Long Sword', tier:'magic', damage:'8-18', str:0, mag:0, dex:0, vit:0, ac:0, hp:0, mana:0, resAll:0, toHit:0, spellLvl:0, atkSpd:'Normal', note:'+Max Damage' },
+  { id:'w12', slot:'weapon', name:"The Butcher's Cleaver", tier:'unique', damage:'4-24', str:10, mag:0, dex:0, vit:0, ac:0, hp:0, mana:0, resAll:0, toHit:0, spellLvl:0, atkSpd:'Normal', note:'Unique, +10 Str' },
+  { id:'w13', slot:'weapon', name:'The Grandfather', tier:'unique', damage:'10-20', str:5, mag:5, dex:5, vit:5, ac:0, hp:20, mana:0, resAll:0, toHit:70, spellLvl:0, atkSpd:'Normal', note:'One-handed, +5 All Attr, +20 HP, +70% ToHit' },
+  { id:'w14', slot:'weapon', name:'Windforce', tier:'unique', damage:'1-14', str:5, mag:0, dex:0, vit:0, ac:0, hp:0, mana:0, resAll:0, toHit:0, spellLvl:0, atkSpd:'Normal', note:'Ranged, knockback, +5 Str' },
+  { id:'w15', slot:'weapon', name:'Dreamflange', tier:'unique', damage:'1-8', str:0, mag:0, dex:0, vit:0, ac:0, hp:0, mana:30, resAll:0, toHit:0, spellLvl:1, atkSpd:'Normal', note:'+30 Mana, +50% Magic Res, +1 Spell Levels', resMag:50 },
+  { id:'w16', slot:'weapon', name:"Griswold's Edge", tier:'unique', damage:'4-12', str:0, mag:0, dex:0, vit:0, ac:0, hp:0, mana:20, resAll:0, toHit:0, spellLvl:0, atkSpd:'Fast', note:'-2 dmg, +25% Fire Res, +20 Mana, Fast', resFire:25 },
+
+  // ─ ARMOR (Body) ─
+  { id:'a1', slot:'armor', name:'Rags', tier:'normal', damage:'', str:0, mag:0, dex:0, vit:0, ac:4, hp:0, mana:0, resAll:0, toHit:0, spellLvl:0, atkSpd:'', note:'' },
+  { id:'a2', slot:'armor', name:'Leather Armor', tier:'normal', damage:'', str:0, mag:0, dex:0, vit:0, ac:11, hp:0, mana:0, resAll:0, toHit:0, spellLvl:0, atkSpd:'', note:'' },
+  { id:'a3', slot:'armor', name:'Chain Mail', tier:'normal', damage:'', str:0, mag:0, dex:0, vit:0, ac:25, hp:0, mana:0, resAll:0, toHit:0, spellLvl:0, atkSpd:'', note:'' },
+  { id:'a4', slot:'armor', name:'Splint Mail', tier:'normal', damage:'', str:0, mag:0, dex:0, vit:0, ac:35, hp:0, mana:0, resAll:0, toHit:0, spellLvl:0, atkSpd:'', note:'' },
+  { id:'a5', slot:'armor', name:'Plate Mail', tier:'normal', damage:'', str:0, mag:0, dex:0, vit:0, ac:45, hp:0, mana:0, resAll:0, toHit:0, spellLvl:0, atkSpd:'', note:'' },
+  { id:'a6', slot:'armor', name:'Full Plate Mail', tier:'normal', damage:'', str:0, mag:0, dex:0, vit:0, ac:60, hp:0, mana:0, resAll:0, toHit:0, spellLvl:0, atkSpd:'', note:'' },
+  { id:'a7', slot:'armor', name:'Godly Plate of the Whale', tier:'magic', damage:'', str:0, mag:0, dex:0, vit:0, ac:80, hp:100, mana:0, resAll:0, toHit:0, spellLvl:0, atkSpd:'', note:'Max AC, +100 HP' },
+  { id:'a8', slot:'armor', name:'Obsidian Plate of Zodiac', tier:'magic', damage:'', str:5, mag:5, dex:5, vit:5, ac:55, hp:0, mana:0, resAll:35, toHit:0, spellLvl:0, atkSpd:'', note:'+All Attr, +35% All Resist' },
+  { id:'a9', slot:'armor', name:"Arkaine's Valor", tier:'unique', damage:'', str:0, mag:0, dex:0, vit:10, ac:25, hp:0, mana:0, resAll:0, toHit:0, spellLvl:0, atkSpd:'', note:'+10 Vit, fastest hit recovery, -3 dmg from enemies' },
+  { id:'a10', slot:'armor', name:"Naj's Light Plate", tier:'unique', damage:'', str:0, mag:5, dex:0, vit:0, ac:50, hp:0, mana:20, resAll:20, toHit:0, spellLvl:0, atkSpd:'', note:'No Str req, +5 Mag, +20 Mana, +20% Res All' },
+
+  // ─ HELM ─
+  { id:'h1', slot:'helm', name:'Cap', tier:'normal', damage:'', str:0, mag:0, dex:0, vit:0, ac:3, hp:0, mana:0, resAll:0, toHit:0, spellLvl:0, atkSpd:'', note:'' },
+  { id:'h2', slot:'helm', name:'Skull Cap', tier:'normal', damage:'', str:0, mag:0, dex:0, vit:0, ac:5, hp:0, mana:0, resAll:0, toHit:0, spellLvl:0, atkSpd:'', note:'' },
+  { id:'h3', slot:'helm', name:'Helm', tier:'normal', damage:'', str:0, mag:0, dex:0, vit:0, ac:8, hp:0, mana:0, resAll:0, toHit:0, spellLvl:0, atkSpd:'', note:'' },
+  { id:'h4', slot:'helm', name:'Full Helm', tier:'normal', damage:'', str:0, mag:0, dex:0, vit:0, ac:12, hp:0, mana:0, resAll:0, toHit:0, spellLvl:0, atkSpd:'', note:'' },
+  { id:'h5', slot:'helm', name:'Great Helm', tier:'normal', damage:'', str:0, mag:0, dex:0, vit:0, ac:15, hp:0, mana:0, resAll:0, toHit:0, spellLvl:0, atkSpd:'', note:'' },
+  { id:'h6', slot:'helm', name:'Crown', tier:'normal', damage:'', str:0, mag:0, dex:0, vit:0, ac:10, hp:0, mana:0, resAll:0, toHit:0, spellLvl:0, atkSpd:'', note:'' },
+  { id:'h7', slot:'helm', name:'Harlequin Crest', tier:'unique', damage:'', str:7, mag:7, dex:7, vit:7, ac:15, hp:7, mana:7, resAll:0, toHit:0, spellLvl:0, atkSpd:'', note:'-1 dmg, +7 All Attr, +7 Mana, +7 HP' },
+  { id:'h8', slot:'helm', name:'Thinking Cap', tier:'unique', damage:'', str:0, mag:0, dex:0, vit:0, ac:4, hp:0, mana:30, resAll:20, toHit:0, spellLvl:2, atkSpd:'', note:'+30 Mana, +20% Res All, +2 Spell Levels' },
+  { id:'h9', slot:'helm', name:'Undead Crown', tier:'unique', damage:'', str:0, mag:0, dex:0, vit:0, ac:8, hp:0, mana:0, resAll:0, toHit:0, spellLvl:0, atkSpd:'', note:'Life Stealing' },
+  { id:'h10', slot:'helm', name:'Gotterdamerung', tier:'unique', damage:'', str:20, mag:0, dex:20, vit:20, ac:60, hp:0, mana:0, resAll:-40, toHit:0, spellLvl:0, atkSpd:'', note:'+60 AC, +20 Str/Dex/Vit, -40% All Res, 0 Light' },
+  { id:'h11', slot:'helm', name:'Obsidian Helm of Zodiac', tier:'magic', damage:'', str:5, mag:5, dex:5, vit:5, ac:12, hp:0, mana:0, resAll:35, toHit:0, spellLvl:0, atkSpd:'', note:'+All Attr, +35% Res All' },
+
+  // ─ SHIELD ─
+  { id:'s1', slot:'shield', name:'Buckler', tier:'normal', damage:'', str:0, mag:0, dex:0, vit:0, ac:3, hp:0, mana:0, resAll:0, toHit:0, spellLvl:0, atkSpd:'', note:'' },
+  { id:'s2', slot:'shield', name:'Small Shield', tier:'normal', damage:'', str:0, mag:0, dex:0, vit:0, ac:5, hp:0, mana:0, resAll:0, toHit:0, spellLvl:0, atkSpd:'', note:'' },
+  { id:'s3', slot:'shield', name:'Large Shield', tier:'normal', damage:'', str:0, mag:0, dex:0, vit:0, ac:8, hp:0, mana:0, resAll:0, toHit:0, spellLvl:0, atkSpd:'', note:'' },
+  { id:'s4', slot:'shield', name:'Kite Shield', tier:'normal', damage:'', str:0, mag:0, dex:0, vit:0, ac:10, hp:0, mana:0, resAll:0, toHit:0, spellLvl:0, atkSpd:'', note:'' },
+  { id:'s5', slot:'shield', name:'Gothic Shield', tier:'normal', damage:'', str:0, mag:0, dex:0, vit:0, ac:14, hp:0, mana:0, resAll:0, toHit:0, spellLvl:0, atkSpd:'', note:'' },
+  { id:'s6', slot:'shield', name:'Tower Shield', tier:'normal', damage:'', str:0, mag:0, dex:0, vit:0, ac:18, hp:0, mana:0, resAll:0, toHit:0, spellLvl:0, atkSpd:'', note:'' },
+  { id:'s7', slot:'shield', name:'Obsidian Shield of Tiger', tier:'magic', damage:'', str:0, mag:0, dex:0, vit:0, ac:14, hp:60, mana:0, resAll:35, toHit:0, spellLvl:0, atkSpd:'', note:'+35% Res All, +60 HP' },
+  { id:'s8', slot:'shield', name:'Holy Defender', tier:'unique', damage:'', str:0, mag:0, dex:0, vit:0, ac:15, hp:0, mana:0, resAll:0, toHit:0, spellLvl:0, atkSpd:'', note:'-2 dmg from enemies, Fast block, resist fire' },
+  { id:'s9', slot:'shield', name:'Stormshield', tier:'unique', damage:'', str:10, mag:0, dex:0, vit:0, ac:20, hp:0, mana:0, resAll:0, toHit:0, spellLvl:0, atkSpd:'', note:'+10 Str, +4 dmg from enemies, indestructible' },
+
+  // ─ RING 1 ─
+  { id:'r1', slot:'ring1', name:'Obsidian Ring of Zodiac', tier:'magic', damage:'', str:5, mag:5, dex:5, vit:5, ac:0, hp:0, mana:0, resAll:35, toHit:0, spellLvl:0, atkSpd:'', note:'+All Attr, +35% Res All' },
+  { id:'r2', slot:'ring1', name:'Ring of Truth', tier:'unique', damage:'', str:0, mag:0, dex:0, vit:0, ac:0, hp:10, mana:0, resAll:10, toHit:0, spellLvl:0, atkSpd:'', note:'+10 HP, +10% Res All, -1 dmg' },
+  { id:'r3', slot:'ring1', name:'Empyrean Band', tier:'unique', damage:'', str:2, mag:2, dex:2, vit:2, ac:0, hp:0, mana:0, resAll:0, toHit:0, spellLvl:0, atkSpd:'', note:'+2 All Attr, +20% Light' },
+  { id:'r4', slot:'ring1', name:'Ring of Engagement', tier:'unique', damage:'', str:0, mag:0, dex:0, vit:0, ac:5, hp:0, mana:0, resAll:0, toHit:0, spellLvl:0, atkSpd:'', note:'-1 dmg, +5 AC' },
+  { id:'r5', slot:'ring1', name:'Ring of the Tiger', tier:'magic', damage:'', str:0, mag:0, dex:0, vit:0, ac:0, hp:60, mana:0, resAll:0, toHit:0, spellLvl:0, atkSpd:'', note:'+60 HP' },
+  { id:'r6', slot:'ring1', name:'Ring of Sorcery', tier:'magic', damage:'', str:0, mag:15, dex:0, vit:0, ac:0, hp:0, mana:0, resAll:0, toHit:0, spellLvl:0, atkSpd:'', note:'+15 Magic' },
+
+  // ─ RING 2 (duplicates of ring pool) ─
+  { id:'r2_1', slot:'ring2', name:'Obsidian Ring of Zodiac', tier:'magic', damage:'', str:5, mag:5, dex:5, vit:5, ac:0, hp:0, mana:0, resAll:35, toHit:0, spellLvl:0, atkSpd:'', note:'+All Attr, +35% Res All' },
+  { id:'r2_2', slot:'ring2', name:'Ring of Truth', tier:'unique', damage:'', str:0, mag:0, dex:0, vit:0, ac:0, hp:10, mana:0, resAll:10, toHit:0, spellLvl:0, atkSpd:'', note:'+10 HP, +10% Res All' },
+  { id:'r2_3', slot:'ring2', name:'Empyrean Band', tier:'unique', damage:'', str:2, mag:2, dex:2, vit:2, ac:0, hp:0, mana:0, resAll:0, toHit:0, spellLvl:0, atkSpd:'', note:'+2 All Attr' },
+  { id:'r2_4', slot:'ring2', name:'Ring of the Tiger', tier:'magic', damage:'', str:0, mag:0, dex:0, vit:0, ac:0, hp:60, mana:0, resAll:0, toHit:0, spellLvl:0, atkSpd:'', note:'+60 HP' },
+  { id:'r2_5', slot:'ring2', name:'Ring of Sorcery', tier:'magic', damage:'', str:0, mag:15, dex:0, vit:0, ac:0, hp:0, mana:0, resAll:0, toHit:0, spellLvl:0, atkSpd:'', note:'+15 Magic' },
+
+  // ─ AMULET ─
+  { id:'am1', slot:'amulet', name:'Obsidian Amulet of Zodiac', tier:'magic', damage:'', str:5, mag:5, dex:5, vit:5, ac:0, hp:0, mana:0, resAll:35, toHit:0, spellLvl:0, atkSpd:'', note:'+All Attr, +35% Res All' },
+  { id:'am2', slot:'amulet', name:'Optic Amulet', tier:'unique', damage:'', str:0, mag:5, dex:0, vit:0, ac:0, hp:0, mana:0, resAll:0, toHit:0, spellLvl:0, atkSpd:'', note:'+5 Mag, +20% Light, resist lightning' },
+  { id:'am3', slot:'amulet', name:'Amulet of the Tiger', tier:'magic', damage:'', str:0, mag:0, dex:0, vit:0, ac:0, hp:60, mana:0, resAll:0, toHit:0, spellLvl:0, atkSpd:'', note:'+60 HP' },
+  { id:'am4', slot:'amulet', name:'Amulet of Sorcery', tier:'magic', damage:'', str:0, mag:15, dex:0, vit:0, ac:0, hp:0, mana:0, resAll:0, toHit:0, spellLvl:0, atkSpd:'', note:'+15 Magic' },
+];
+
+// Character Builder State
+let cbState = {
+  charClass: 'warrior',
+  level: 1,
+  allocStr: 0, allocMag: 0, allocDex: 0, allocVit: 0,
+  equipment: { weapon: null, armor: null, helm: null, shield: null, ring1: null, ring2: null, amulet: null },
+  equipSlotTab: 'weapon',
+};
+
+function cbGetBase() {
+  const c = CLASSES[cbState.charClass];
+  return { ...c.baseStats };
+}
+
+function cbGetMaxStats() {
+  return { ...CLASSES[cbState.charClass].maxStats };
+}
+
+function cbTotalAllocated() {
+  return cbState.allocStr + cbState.allocMag + cbState.allocDex + cbState.allocVit;
+}
+
+function cbPointsAvailable() {
+  return Math.max(0, (cbState.level - 1) * 5 - cbTotalAllocated());
+}
+
+function cbGearBonus(stat) {
+  let total = 0;
+  for (const slot in cbState.equipment) {
+    const item = cbState.equipment[slot];
+    if (item) total += (item[stat] || 0);
+  }
+  return total;
+}
+
+function cbGetComputedStats() {
+  const base = cbGetBase();
+  const maxS = cbGetMaxStats();
+  const cl = CLASSES[cbState.charClass];
+  const lvl = cbState.level;
+
+  // Base + allocations (capped at class max before gear)
+  let str = Math.min(base.str + cbState.allocStr, maxS.str);
+  let mag = Math.min(base.mag + cbState.allocMag, maxS.mag);
+  let dex = Math.min(base.dex + cbState.allocDex, maxS.dex);
+  let vit = Math.min(base.vit + cbState.allocVit, maxS.vit);
+
+  // Gear bonuses (can exceed class max)
+  const gStr = cbGearBonus('str'), gMag = cbGearBonus('mag'), gDex = cbGearBonus('dex'), gVit = cbGearBonus('vit');
+  str += gStr; mag += gMag; dex += gDex; vit += gVit;
+
+  const gHP = cbGearBonus('hp');
+  const gMana = cbGearBonus('mana');
+  const gAC = cbGearBonus('ac');
+  const gResAll = cbGearBonus('resAll');
+  const gToHit = cbGearBonus('toHit');
+  const gSpellLvl = cbGearBonus('spellLvl');
+
+  // Life: startLife + vit*perLvlLife + (level-1)*perLvlLife + gear HP
+  const life = cl.startLife + (vit - gVit) * cl.perLevel.life + (lvl - 1) * cl.perLevel.life + gHP;
+  const mana = cl.startMana + (mag - gMag) * cl.perLevel.mana + (lvl - 1) * cl.perLevel.mana + gMana;
+
+  // Armor class: gear AC + dex/5
+  const armorClass = gAC + Math.floor(dex / 5);
+
+  // To hit chance (simplified): dex/2 + gear bonuses + 50 (base)
+  const toHitPct = Math.min(95, 50 + Math.floor(dex / 2) + gToHit);
+
+  // Damage (from weapon)
+  const wpn = cbState.equipment.weapon;
+  let dmgMin = 1, dmgMax = 1;
+  if (wpn && wpn.damage) {
+    const parts = wpn.damage.split('-').map(Number);
+    dmgMin = parts[0] || 1;
+    dmgMax = parts[1] || dmgMin;
+    // Strength bonus to melee damage
+    if (!wpn.note.includes('Ranged')) {
+      dmgMin += Math.floor(str / 5);
+      dmgMax += Math.floor(str / 5);
+    } else {
+      // Dex bonus to ranged
+      dmgMin += Math.floor(dex / 5);
+      dmgMax += Math.floor(dex / 5);
+    }
+  }
+
+  // Resistances (capped at 75%)
+  const resAll = Math.max(-100, Math.min(75, gResAll));
+
+  return {
+    str, mag, dex, vit,
+    gStr, gMag, gDex, gVit,
+    life, mana, armorClass, toHitPct,
+    dmgMin, dmgMax, resAll, gSpellLvl,
+    gHP, gMana, gAC, gResAll, gToHit,
+  };
+}
+
+function cbAllocStat(stat, delta) {
+  const key = 'alloc' + stat.charAt(0).toUpperCase() + stat.slice(1);
+  const maxS = cbGetMaxStats();
+  const base = cbGetBase();
+  const statKey = stat === 'str' ? 'str' : stat === 'mag' ? 'mag' : stat === 'dex' ? 'dex' : 'vit';
+
+  if (delta > 0) {
+    if (cbPointsAvailable() <= 0) return;
+    if (base[statKey] + cbState[key] + delta > maxS[statKey]) return;
+  }
+  if (delta < 0 && cbState[key] + delta < 0) return;
+
+  cbState[key] += delta;
+  renderContent();
+}
+
+function cbEquipItem(itemId) {
+  const item = EQUIPMENT_DB.find(e => e.id === itemId);
+  if (!item) return;
+  cbState.equipment[item.slot] = item;
+  renderContent();
+}
+
+function cbUnequipSlot(slot) {
+  cbState.equipment[slot] = null;
+  renderContent();
+}
+
+function cbSetClass(cls) {
+  cbState.charClass = cls;
+  cbState.allocStr = 0; cbState.allocMag = 0; cbState.allocDex = 0; cbState.allocVit = 0;
+  cbState.equipment = { weapon: null, armor: null, helm: null, shield: null, ring1: null, ring2: null, amulet: null };
+  renderContent();
+}
+
+function cbSetLevel(lvl) {
+  cbState.level = parseInt(lvl);
+  // Clamp allocations if we reduced level
+  const avail = (cbState.level - 1) * 5;
+  while (cbTotalAllocated() > avail) {
+    if (cbState.allocVit > 0) cbState.allocVit--;
+    else if (cbState.allocDex > 0) cbState.allocDex--;
+    else if (cbState.allocMag > 0) cbState.allocMag--;
+    else if (cbState.allocStr > 0) cbState.allocStr--;
+    else break;
+  }
+  renderContent();
+}
+
+function renderCharBuilder() {
+  const st = cbGetComputedStats();
+  const base = cbGetBase();
+  const cl = CLASSES[cbState.charClass];
+  const pts = cbPointsAvailable();
+  const slotTab = cbState.equipSlotTab;
+
+  const slots = [
+    { key: 'helm', label: 'Head' },
+    { key: 'amulet', label: 'Amulet' },
+    { key: 'weapon', label: 'Weapon' },
+    { key: 'armor', label: 'Armor' },
+    { key: 'shield', label: 'Shield' },
+    { key: 'ring1', label: 'Ring 1' },
+    { key: 'ring2', label: 'Ring 2' },
+  ];
+
+  function statRow(label, baseVal, allocVal, gearBonus, maxVal) {
+    const total = Math.min(baseVal + allocVal, maxVal) + gearBonus;
+    const bonusText = gearBonus > 0 ? `<span class="cs-stat-bonus pos">(+${gearBonus})</span>` : gearBonus < 0 ? `<span class="cs-stat-bonus neg">(${gearBonus})</span>` : '';
+    const cls = gearBonus !== 0 ? (gearBonus > 0 ? 'boosted' : 'reduced') : (allocVal > 0 ? 'modified' : '');
+    return `<div class="cs-stat-row">
+      <span class="cs-stat-label">${label}</span>
+      <span class="cs-stat-value ${cls}">${total}${bonusText}</span>
+    </div>`;
+  }
+
+  function resistBar(icon, label, pct, color) {
+    const clamped = Math.max(-100, Math.min(75, pct));
+    const width = clamped > 0 ? (clamped / 75) * 100 : 0;
+    return `<div class="cs-resist-bar">
+      <span class="cs-resist-icon">${icon}</span>
+      <span style="color:var(--text-dim);font-size:11px;min-width:40px">${label}</span>
+      <div class="cs-resist-track"><div class="cs-resist-fill" style="width:${width}%;background:${color}"></div></div>
+      <span class="cs-resist-pct" style="color:${clamped > 0 ? color : 'var(--red-bright)'}">${clamped}%</span>
+    </div>`;
+  }
+
+  const equipItemsForSlot = EQUIPMENT_DB.filter(e => e.slot === slotTab);
+  const currentInSlot = cbState.equipment[slotTab];
+
+  return `
+  <div class="cb-layout">
+    <!-- LEFT: Character Sheet -->
+    <div class="char-sheet">
+      <div class="cs-header">
+        <div class="cs-name">${cl.name}</div>
+        <div class="cs-class">Level ${cbState.level} · ${cl.icon}</div>
+      </div>
+      <div class="cs-body">
+        <div class="cs-stat-group">
+          <div class="cs-stat-group-title">Attributes</div>
+          ${statRow('Strength', base.str, cbState.allocStr, st.gStr, cbGetMaxStats().str)}
+          ${statRow('Magic', base.mag, cbState.allocMag, st.gMag, cbGetMaxStats().mag)}
+          ${statRow('Dexterity', base.dex, cbState.allocDex, st.gDex, cbGetMaxStats().dex)}
+          ${statRow('Vitality', base.vit, cbState.allocVit, st.gVit, cbGetMaxStats().vit)}
+        </div>
+
+        <div class="cs-divider"></div>
+
+        <div class="cs-stat-group">
+          <div class="cs-stat-group-title">Combat</div>
+          <div class="cs-stat-row">
+            <span class="cs-stat-label">Life</span>
+            <span class="cs-stat-value" style="color:var(--red-bright)">${Math.floor(st.life)}</span>
+          </div>
+          <div class="cs-stat-row">
+            <span class="cs-stat-label">Mana</span>
+            <span class="cs-stat-value" style="color:var(--blue-bright)">${Math.floor(st.mana)}</span>
+          </div>
+          <div class="cs-stat-row">
+            <span class="cs-stat-label">Armor Class</span>
+            <span class="cs-stat-value">${st.armorClass}</span>
+          </div>
+          <div class="cs-stat-row">
+            <span class="cs-stat-label">To Hit</span>
+            <span class="cs-stat-value">${st.toHitPct}%</span>
+          </div>
+          <div class="cs-stat-row">
+            <span class="cs-stat-label">Damage</span>
+            <span class="cs-stat-value">${st.dmgMin}-${st.dmgMax}</span>
+          </div>
+          ${st.gSpellLvl > 0 ? `<div class="cs-stat-row">
+            <span class="cs-stat-label">Spell Levels</span>
+            <span class="cs-stat-value boosted">+${st.gSpellLvl}</span>
+          </div>` : ''}
+        </div>
+
+        <div class="cs-divider"></div>
+
+        <div class="cs-stat-group">
+          <div class="cs-stat-group-title">Resistances</div>
+          ${resistBar('🔥', 'Fire', st.resAll + (cbGearBonus('resFire') || 0), '#e86420')}
+          ${resistBar('⚡', 'Light', st.resAll, '#ffd700')}
+          ${resistBar('✨', 'Magic', st.resAll + (cbGearBonus('resMag') || 0), '#7b68ee')}
+        </div>
+
+        <div class="cs-divider"></div>
+
+        <div class="cs-stat-group">
+          <div class="cs-stat-group-title">Equipment</div>
+          <div class="cs-paperdoll">
+            ${slots.map(s => {
+              const item = cbState.equipment[s.key];
+              const filled = item ? 'filled' : '';
+              const uq = item && item.tier === 'unique' ? 'unique-item' : '';
+              const colorCls = item ? (item.tier === 'unique' ? 'color-unique' : item.tier === 'magic' ? 'color-magic' : '') : '';
+              return `<div class="cs-equip-slot slot-${s.key} ${filled} ${uq}" onclick="cbState.equipSlotTab='${s.key}';renderContent()">
+                <div class="cs-slot-label">${s.label}</div>
+                ${item ? `<div class="cs-slot-item ${colorCls}">${item.name}</div><span class="cs-slot-remove" onclick="event.stopPropagation();cbUnequipSlot('${s.key}')">✕</span>` : '<div class="cs-slot-item" style="color:#3a2a1a">Empty</div>'}
+              </div>`;
+            }).join('')}
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- RIGHT: Controls -->
+    <div class="cb-controls">
+      <!-- Class Select -->
+      <div class="cb-section">
+        <div class="cb-section-title">Class</div>
+        <div class="cb-class-select">
+          ${Object.keys(CLASSES).map(k => `<div class="cb-class-btn ${cbState.charClass === k ? 'active' : ''}" onclick="cbSetClass('${k}')">${CLASSES[k].icon}<br>${CLASSES[k].name}</div>`).join('')}
+        </div>
+        <div class="cb-level-row">
+          <span class="cb-level-label">Level</span>
+          <input type="range" class="cb-level-slider" min="1" max="50" value="${cbState.level}" oninput="cbSetLevel(this.value)">
+          <span class="cb-level-val">${cbState.level}</span>
+        </div>
+      </div>
+
+      <!-- Stat Allocation -->
+      <div class="cb-section">
+        <div class="cb-section-title">Stat Points</div>
+        <div class="cb-points-remaining">Available: <span>${pts}</span> / ${(cbState.level - 1) * 5} total</div>
+        <div class="cb-stat-alloc">
+          ${[{s:'str',l:'Strength',v:cbState.allocStr},{s:'mag',l:'Magic',v:cbState.allocMag},{s:'dex',l:'Dexterity',v:cbState.allocDex},{s:'vit',l:'Vitality',v:cbState.allocVit}].map(x => `
+            <div class="cb-stat-ctrl">
+              <span class="cb-stat-ctrl-label">${x.l}</span>
+              <button class="cb-stat-btn" onclick="cbAllocStat('${x.s}',-5)" ${x.v < 5 ? 'disabled' : ''}>◂</button>
+              <button class="cb-stat-btn" onclick="cbAllocStat('${x.s}',-1)" ${x.v <= 0 ? 'disabled' : ''}>-</button>
+              <span class="cb-stat-ctrl-val">${x.v}</span>
+              <button class="cb-stat-btn" onclick="cbAllocStat('${x.s}',1)" ${pts <= 0 ? 'disabled' : ''}>+</button>
+              <button class="cb-stat-btn" onclick="for(let i=0;i<5&&cbPointsAvailable()>0;i++)cbAllocStat('${x.s}',1)" ${pts <= 0 ? 'disabled' : ''}>▸</button>
+            </div>
+          `).join('')}
+        </div>
+      </div>
+
+      <!-- Equipment Picker -->
+      <div class="cb-section">
+        <div class="cb-section-title">Equipment</div>
+        <div class="cb-slot-tabs">
+          ${slots.map(s => `<div class="cb-slot-tab ${slotTab === s.key ? 'active' : ''}" onclick="cbState.equipSlotTab='${s.key}';renderContent()">${s.label}</div>`).join('')}
+        </div>
+        <div class="cb-equip-list">
+          ${equipItemsForSlot.map(item => {
+            const isEquipped = currentInSlot && currentInSlot.id === item.id;
+            const tierCls = item.tier === 'unique' ? 'unique' : item.tier === 'magic' ? 'magic' : '';
+            const bonuses = [];
+            if (item.str) bonuses.push('+'+item.str+' Str');
+            if (item.mag) bonuses.push('+'+item.mag+' Mag');
+            if (item.dex) bonuses.push('+'+item.dex+' Dex');
+            if (item.vit) bonuses.push('+'+item.vit+' Vit');
+            if (item.hp) bonuses.push('+'+item.hp+' HP');
+            if (item.mana) bonuses.push('+'+item.mana+' Mana');
+            if (item.ac) bonuses.push('+'+item.ac+' AC');
+            if (item.resAll) bonuses.push((item.resAll>0?'+':'')+item.resAll+'% Res');
+            if (item.damage) bonuses.push('Dmg: '+item.damage);
+            if (item.spellLvl) bonuses.push('+'+item.spellLvl+' Spell Lvl');
+            return `<div class="cb-equip-item ${isEquipped ? 'equipped' : ''}" onclick="cbEquipItem('${item.id}')">
+              <div>
+                <div class="cb-equip-name ${tierCls}">${item.name}</div>
+                <div class="cb-equip-stats">${bonuses.join(' · ')}</div>
+                ${item.note ? `<div class="cb-equip-stats" style="color:var(--text-dim);font-style:italic">${item.note}</div>` : ''}
+              </div>
+              <button class="cb-equip-btn">${isEquipped ? 'EQUIPPED' : 'EQUIP'}</button>
+            </div>`;
+          }).join('')}
+        </div>
+      </div>
+    </div>
+  </div>`;
+}
+
+// ─── EVENT HANDLERS ───
+
+function setSubTab(page, tab) {
+  currentSubTab[page] = tab;
+  renderContent();
+}
+
+document.getElementById('search-box').addEventListener('input', (e) => {
+  searchFilter = e.target.value;
+  renderContent();
+});
+
+// ─── INIT ───
+renderSidebar();
+renderContent();
+</script>
+</body>
+</html>
