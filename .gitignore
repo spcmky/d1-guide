@@ -13,3 +13,4 @@ package-lock.json
 *.swp
 *.swo
 /.claude
+.claude/settings.local.json

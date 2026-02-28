@@ -207,6 +207,24 @@ html, body {
 
 .tab:hover { color: var(--text); }
 .tab.active { color: var(--gold); border-bottom-color: var(--gold); }
+.tab.diff-nightmare { color: var(--fire); }
+.tab.diff-nightmare.active { color: var(--fire); border-bottom-color: var(--fire); }
+.tab.diff-hell { color: var(--red-bright); }
+.tab.diff-hell.active { color: var(--red-bright); border-bottom-color: var(--red-bright); }
+
+.difficulty-info {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 12px;
+  margin-bottom: 20px;
+  padding: 14px;
+  background: rgba(0,0,0,0.3);
+  border-radius: 6px;
+  border: 1px solid var(--border);
+  font-size: 13px;
+}
+.difficulty-info div { line-height: 1.5; }
+.difficulty-info strong { color: var(--gold-dim); }
 
 /* ─── Cards ─── */
 .card-grid {
@@ -1235,26 +1253,26 @@ const DUNGEON_LEVELS = [
 ];
 
 const MONSTERS = [
-  { name: 'Zombie', area: 'Church 1-3', hp: '6-18', ac: '5-15', dmg: '2-6', xp: '54-108', resist: 'None', immune: 'None', type: 'Undead', img: 'images/monsters/zombie.png', tips: 'Slow and predictable. Attack and back away.' },
-  { name: 'Fallen One', area: 'Church 1-3', hp: '4-12', ac: '10-20', dmg: '1-4', xp: '46-80', resist: 'None', immune: 'None', type: 'Animal', img: 'images/monsters/fallen-one.png', tips: 'Kill the Shaman first — others flee when he dies and he can resurrect them.' },
-  { name: 'Skeleton', area: 'Church 1-4', hp: '8-20', ac: '15-25', dmg: '2-8', xp: '64-120', resist: 'None', immune: 'Magic', type: 'Undead', img: 'images/monsters/skeleton.png', tips: 'Immune to Magic damage type. Use fire, lightning, or physical.' },
-  { name: 'Skeleton Archer', area: 'Church 2-4', hp: '6-14', ac: '20-30', dmg: '2-8', xp: '72-140', resist: 'None', immune: 'Magic', type: 'Undead', img: 'images/monsters/skeleton-archer.png', tips: 'Same immunities as Skeletons. Close distance quickly or use fire.' },
-  { name: 'Scavenger', area: 'Church 1-3', hp: '5-15', ac: '10-18', dmg: '1-6', xp: '60-100', resist: 'None', immune: 'None', type: 'Animal', img: 'images/monsters/scavenger.png', tips: 'Fast but fragile. Will flee at low HP.' },
-  { name: 'The Butcher', area: 'Church 2 (Quest)', hp: '110', ac: '25', dmg: '6-12', xp: '440', resist: 'None', immune: 'None', type: 'Demon', img: 'images/monsters/butcher.png', tips: 'Famous "Ahh, fresh meat!" — lure him into a doorway to fight safely. Or use fire from behind grating.' },
-  { name: 'Skeleton King', area: 'Church 3 (Quest)', hp: '240', ac: '35', dmg: '6-16', xp: '1360', resist: 'Fire, Lightning', immune: 'Magic', type: 'Undead', img: 'images/monsters/skeleton-king.png', tips: 'Summons skeletons. Focus him down and ignore adds. Holy Bolt is very effective.' },
-  { name: 'Goat Man', area: 'Catacombs 5-7', hp: '24-50', ac: '25-40', dmg: '4-12', xp: '180-340', resist: 'None', immune: 'None', type: 'Demon', img: 'images/monsters/goat-man.png', tips: 'Come in melee and ranged variants. Kill archers first.' },
-  { name: 'Acid Beast', area: 'Catacombs 5-7', hp: '20-40', ac: '20-30', dmg: '2-14', xp: '156-260', resist: 'None', immune: 'None', type: 'Animal', img: 'images/monsters/acid-beast.png', tips: 'Spit acid at range. Close distance to stop them from spitting.' },
-  { name: 'Hidden', area: 'Catacombs 5-8', hp: '30-60', ac: '30-45', dmg: '6-14', xp: '240-420', resist: 'None', immune: 'None', type: 'Demon', img: 'images/monsters/hidden.png', tips: 'Invisible until attacking. Listen for footsteps. Can be revealed with Infravision.' },
-  { name: 'Lightning Demon', area: 'Catacombs 6-8', hp: '40-70', ac: '35-50', dmg: '1-10 + Lightning', xp: '300-500', resist: 'Lightning', immune: 'None', type: 'Demon', img: 'images/monsters/lightning-demon.png', tips: 'Lightning trails behind them. Don\'t chase — let them come to you.' },
-  { name: 'Succubus', area: 'Caves 9-12', hp: '60-120', ac: '40-60', dmg: '1-16 (Blood Star)', xp: '700-1200', resist: 'Magic', immune: 'None', type: 'Demon', img: 'images/monsters/succubus.png', tips: 'Cast Blood Star which homes in. Extremely dangerous in groups. Priority kill target. Use Stone Curse.' },
-  { name: 'Balrog', area: 'Caves 10-12', hp: '80-160', ac: '50-70', dmg: '10-20', xp: '1000-1600', resist: 'Fire', immune: 'None', type: 'Demon', img: 'images/monsters/balrog.png', tips: 'Large, powerful melee fighters. Resist Fire. Use Lightning or physical.' },
-  { name: 'Magma Demon', area: 'Caves 9-11', hp: '50-100', ac: '35-55', dmg: '6-16 (Inferno)', xp: '600-1000', resist: 'Fire', immune: 'Magic', type: 'Demon', img: 'images/monsters/magma-demon.png', tips: 'Breathe Inferno. Immune to Magic, resist Fire. Use Lightning or physical attacks.' },
-  { name: 'Viper', area: 'Caves 9-12', hp: '60-110', ac: '45-60', dmg: '1-18 + Charge', xp: '700-1100', resist: 'Magic', immune: 'None', type: 'Demon', img: 'images/monsters/viper.png', tips: 'Charge attack has unusual hit detection. Stone Curse is very effective.' },
-  { name: 'Blood Knight', area: 'Hell 13-16', hp: '120-200', ac: '60-80', dmg: '15-30', xp: '1800-2800', resist: 'Fire, Lightning', immune: 'Magic', type: 'Demon', img: 'images/monsters/blood-knight.png', tips: 'Fast, hard-hitting melee. Resist Fire and Lightning. Use physical damage or Stone Curse.' },
-  { name: 'Soul Burner', area: 'Hell 13-15', hp: '80-140', ac: '50-65', dmg: '10-20', xp: '1200-2000', resist: 'Fire', immune: 'Lightning', type: 'Undead', img: 'images/monsters/soul-burner.png', tips: 'Immune to Lightning. Use Fire or physical attacks.' },
-  { name: 'Advocate', area: 'Hell 14-16', hp: '100-180', ac: '55-70', dmg: '1-20 (spells)', xp: '1600-2600', resist: 'Magic, Fire', immune: 'Lightning', type: 'Demon', img: 'images/monsters/advocate.png', tips: 'Dangerous casters. Immune to Lightning, resist Magic and Fire. Rush them down with melee.' },
-  { name: 'Steel Lord', area: 'Hell 15-16', hp: '150-240', ac: '70-85', dmg: '12-28', xp: '2400-3600', resist: 'Fire, Lightning, Magic', immune: 'None', type: 'Demon', img: 'images/monsters/steel-lord.png', tips: 'Triple resist but no immunities. Very tanky. Physical damage is most reliable.' },
-  { name: 'Diablo', area: 'Hell 16 (Boss)', hp: '1666', ac: '90', dmg: '30-60 + Apocalypse', xp: '30666', resist: 'Fire, Lightning, Magic', immune: 'None', type: 'Demon', img: 'images/monsters/diablo.png', tips: 'Final boss. Triple resist but no immunities. Stone Curse + melee is safest. Mana Shield for Sorcerers. Bring Full Rejuvenation potions.' },
+  { name: 'Zombie', area: 'Church 1-3', level: 2, hp: '6-18', ac: '5-15', dmg: '2-6', xp: '54-108', resist: 'None', immune: 'None', resistHell: 'None', immuneHell: 'None', type: 'Undead', img: 'images/monsters/zombie.png', tips: 'Slow and predictable. Attack and back away.' },
+  { name: 'Fallen One', area: 'Church 1-3', level: 2, hp: '4-12', ac: '10-20', dmg: '1-4', xp: '46-80', resist: 'None', immune: 'None', resistHell: 'None', immuneHell: 'None', type: 'Animal', img: 'images/monsters/fallen-one.png', tips: 'Kill the Shaman first — others flee when he dies and he can resurrect them.' },
+  { name: 'Skeleton', area: 'Church 1-4', level: 3, hp: '8-20', ac: '15-25', dmg: '2-8', xp: '64-120', resist: 'None', immune: 'Magic', resistHell: 'Fire, Lightning', immuneHell: 'Magic', type: 'Undead', img: 'images/monsters/skeleton.png', tips: 'Immune to Magic damage type. Use fire, lightning, or physical.' },
+  { name: 'Skeleton Archer', area: 'Church 2-4', level: 4, hp: '6-14', ac: '20-30', dmg: '2-8', xp: '72-140', resist: 'None', immune: 'Magic', resistHell: 'Fire, Lightning', immuneHell: 'Magic', type: 'Undead', img: 'images/monsters/skeleton-archer.png', tips: 'Same immunities as Skeletons. Close distance quickly or use fire.' },
+  { name: 'Scavenger', area: 'Church 1-3', level: 2, hp: '5-15', ac: '10-18', dmg: '1-6', xp: '60-100', resist: 'None', immune: 'None', resistHell: 'None', immuneHell: 'None', type: 'Animal', img: 'images/monsters/scavenger.png', tips: 'Fast but fragile. Will flee at low HP.' },
+  { name: 'The Butcher', area: 'Church 2 (Quest)', level: 11, hp: '110', ac: '25', dmg: '6-12', xp: '440', resist: 'None', immune: 'None', resistHell: 'Fire', immuneHell: 'None', type: 'Demon', img: 'images/monsters/butcher.png', tips: 'Famous "Ahh, fresh meat!" — lure him into a doorway to fight safely. Or use fire from behind grating.' },
+  { name: 'Skeleton King', area: 'Church 3 (Quest)', level: 7, hp: '240', ac: '35', dmg: '6-16', xp: '1360', resist: 'Fire, Lightning', immune: 'Magic', resistHell: 'Magic', immuneHell: 'Fire, Lightning', type: 'Undead', img: 'images/monsters/skeleton-king.png', tips: 'Summons skeletons. Focus him down and ignore adds. Holy Bolt is very effective.' },
+  { name: 'Goat Man', area: 'Catacombs 5-7', level: 6, hp: '24-50', ac: '25-40', dmg: '4-12', xp: '180-340', resist: 'None', immune: 'None', resistHell: 'Fire', immuneHell: 'Lightning', type: 'Demon', img: 'images/monsters/goat-man.png', tips: 'Come in melee and ranged variants. Kill archers first.' },
+  { name: 'Acid Beast', area: 'Catacombs 5-7', level: 6, hp: '20-40', ac: '20-30', dmg: '2-14', xp: '156-260', resist: 'None', immune: 'None', resistHell: 'Fire', immuneHell: 'None', type: 'Animal', img: 'images/monsters/acid-beast.png', tips: 'Spit acid at range. Close distance to stop them from spitting.' },
+  { name: 'Hidden', area: 'Catacombs 5-8', level: 7, hp: '30-60', ac: '30-45', dmg: '6-14', xp: '240-420', resist: 'None', immune: 'None', resistHell: 'Magic', immuneHell: 'Fire', type: 'Demon', img: 'images/monsters/hidden.png', tips: 'Invisible until attacking. Listen for footsteps. Can be revealed with Infravision.' },
+  { name: 'Lightning Demon', area: 'Catacombs 6-8', level: 8, hp: '40-70', ac: '35-50', dmg: '1-10 + Lightning', xp: '300-500', resist: 'Lightning', immune: 'None', resistHell: 'Magic', immuneHell: 'Lightning', type: 'Demon', img: 'images/monsters/lightning-demon.png', tips: 'Lightning trails behind them. Don\'t chase — let them come to you.' },
+  { name: 'Succubus', area: 'Caves 9-12', level: 11, hp: '60-120', ac: '40-60', dmg: '1-16 (Blood Star)', xp: '700-1200', resist: 'Magic', immune: 'None', resistHell: 'Lightning', immuneHell: 'Magic, Fire', type: 'Demon', img: 'images/monsters/succubus.png', tips: 'Cast Blood Star which homes in. Extremely dangerous in groups. Priority kill target. Use Stone Curse.' },
+  { name: 'Balrog', area: 'Caves 10-12', level: 12, hp: '80-160', ac: '50-70', dmg: '10-20', xp: '1000-1600', resist: 'Fire', immune: 'None', resistHell: 'Magic', immuneHell: 'Fire, Lightning', type: 'Demon', img: 'images/monsters/balrog.png', tips: 'Large, powerful melee fighters. Resist Fire. Use Lightning or physical.' },
+  { name: 'Magma Demon', area: 'Caves 9-11', level: 10, hp: '50-100', ac: '35-55', dmg: '6-16 (Inferno)', xp: '600-1000', resist: 'Fire', immune: 'Magic', resistHell: 'Lightning', immuneHell: 'Magic, Fire', type: 'Demon', img: 'images/monsters/magma-demon.png', tips: 'Breathe Inferno. Immune to Magic, resist Fire. Use Lightning or physical attacks.' },
+  { name: 'Viper', area: 'Caves 9-12', level: 11, hp: '60-110', ac: '45-60', dmg: '1-18 + Charge', xp: '700-1100', resist: 'Magic', immune: 'None', resistHell: 'Lightning', immuneHell: 'Magic, Fire', type: 'Demon', img: 'images/monsters/viper.png', tips: 'Charge attack has unusual hit detection. Stone Curse is very effective.' },
+  { name: 'Blood Knight', area: 'Hell 13-16', level: 15, hp: '120-200', ac: '60-80', dmg: '15-30', xp: '1800-2800', resist: 'Fire, Lightning', immune: 'Magic', resistHell: 'Fire, Lightning, Magic', immuneHell: 'None', type: 'Demon', img: 'images/monsters/blood-knight.png', tips: 'Fast, hard-hitting melee. Resist Fire and Lightning. Use physical damage or Stone Curse.' },
+  { name: 'Soul Burner', area: 'Hell 13-15', level: 14, hp: '80-140', ac: '50-65', dmg: '10-20', xp: '1200-2000', resist: 'Fire', immune: 'Lightning', resistHell: 'Fire, Magic', immuneHell: 'Lightning', type: 'Undead', img: 'images/monsters/soul-burner.png', tips: 'Immune to Lightning. Use Fire or physical attacks.' },
+  { name: 'Advocate', area: 'Hell 14-16', level: 16, hp: '100-180', ac: '55-70', dmg: '1-20 (spells)', xp: '1600-2600', resist: 'Magic, Fire', immune: 'Lightning', resistHell: 'Fire', immuneHell: 'Magic, Lightning', type: 'Demon', img: 'images/monsters/advocate.png', tips: 'Dangerous casters. Immune to Lightning, resist Magic and Fire. Rush them down with melee.' },
+  { name: 'Steel Lord', area: 'Hell 15-16', level: 17, hp: '150-240', ac: '70-85', dmg: '12-28', xp: '2400-3600', resist: 'Fire, Lightning, Magic', immune: 'None', resistHell: 'Fire, Lightning, Magic', immuneHell: 'None', type: 'Demon', img: 'images/monsters/steel-lord.png', tips: 'Triple resist but no immunities. Very tanky. Physical damage is most reliable.' },
+  { name: 'Diablo', area: 'Hell 16 (Boss)', level: 30, hp: '1666', ac: '90', dmg: '30-60 + Apocalypse', xp: '30666', resist: 'Fire, Lightning, Magic', immune: 'None', resistHell: 'Fire, Lightning, Magic', immuneHell: 'None', type: 'Demon', img: 'images/monsters/diablo.png', tips: 'Final boss. Triple resist but no immunities. Stone Curse + melee is safest. Mana Shield for Sorcerers. Bring Full Rejuvenation potions.' },
 ];
 
 const UNIQUE_ITEMS = [
@@ -1688,6 +1706,13 @@ function renderClasses() {
 
 function renderLevels() {
   return `
+    <div class="card" style="margin-bottom:20px;border-color:var(--border-glow)">
+      <div class="card-title">Difficulty Levels</div>
+      <p style="margin-bottom:8px">After defeating Diablo, you unlock higher difficulties. All 16 dungeon levels reopen with scaled monsters.</p>
+      <p><span style="color:var(--text)"><strong>Normal:</strong></span> Base stats. First playthrough.</p>
+      <p><span style="color:var(--fire)"><strong>Nightmare:</strong></span> Monster HP x3, damage x2, AC +50, levels +15. Same resistances as Normal.</p>
+      <p><span style="color:var(--red-bright)"><strong>Hell:</strong></span> Monster HP x4, damage x4, AC +80, levels +30. Many monsters gain new immunities and resistances.</p>
+    </div>
     <div class="card-grid">
       ${DUNGEON_LEVELS.map(l => `
         <div class="card">
@@ -1701,23 +1726,93 @@ function renderLevels() {
     </div>`;
 }
 
+function parseRange(str) {
+  const s = String(str);
+  const m = s.match(/^(\d+)\s*-\s*(\d+)/);
+  if (m) {
+    const suffix = s.slice(m[0].length).trim();
+    return { min: parseInt(m[1]), max: parseInt(m[2]), suffix };
+  }
+  const single = s.match(/^(\d+)/);
+  if (single) {
+    const suffix = s.slice(single[0].length).trim();
+    return { min: parseInt(single[1]), max: parseInt(single[1]), suffix };
+  }
+  return null;
+}
+
+function formatRange(min, max, suffix) {
+  const base = min === max ? String(min) : min + '-' + max;
+  return suffix ? base + ' ' + suffix : base;
+}
+
+function scaleMonsterStats(m, diff) {
+  if (diff === 'Normal') return m;
+  const r = {};
+  Object.assign(r, m);
+
+  const hp = parseRange(m.hp);
+  const dmg = parseRange(m.dmg);
+  const ac = parseRange(m.ac);
+  const xp = parseRange(m.xp);
+
+  if (diff === 'Nightmare') {
+    if (hp) r.hp = formatRange(hp.min * 3 + 100, hp.max * 3 + 100, hp.suffix);
+    if (dmg) r.dmg = formatRange(2 * (dmg.min + 2), 2 * (dmg.max + 2), dmg.suffix);
+    if (ac) r.ac = formatRange(ac.min + 50, ac.max + 50, ac.suffix);
+    if (xp) r.xp = formatRange(2 * (xp.min + 1000), 2 * (xp.max + 1000), xp.suffix);
+    r.level = m.level + 15;
+  } else {
+    if (hp) r.hp = formatRange(hp.min * 4 + 200, hp.max * 4 + 200, hp.suffix);
+    if (dmg) r.dmg = formatRange(4 * dmg.min + 6, 4 * dmg.max + 6, dmg.suffix);
+    if (ac) r.ac = formatRange(ac.min + 80, ac.max + 80, ac.suffix);
+    if (xp) r.xp = formatRange(4 * (xp.min + 1000), 4 * (xp.max + 1000), xp.suffix);
+    r.level = m.level + 30;
+    r.resist = m.resistHell;
+    r.immune = m.immuneHell;
+  }
+  return r;
+}
+
 function renderMonsters() {
+  const diff = currentSubTab.monsters || 'Normal';
   let filtered = MONSTERS;
   if (searchFilter) {
     const q = searchFilter.toLowerCase();
     filtered = MONSTERS.filter(m => m.name.toLowerCase().includes(q) || m.area.toLowerCase().includes(q) || m.type.toLowerCase().includes(q));
   }
 
+  const diffTabs = ['Normal', 'Nightmare', 'Hell'];
+  const diffClass = { Normal: '', Nightmare: 'diff-nightmare', Hell: 'diff-hell' };
+
+  const scalingCard = diff !== 'Normal' ? `
+    <div class="difficulty-info">
+      <div><strong>HP:</strong> ${diff === 'Nightmare' ? '3x Base + 100' : '4x Base + 200'}</div>
+      <div><strong>Damage:</strong> ${diff === 'Nightmare' ? '2 x (Base + 2)' : '4x Base + 6'}</div>
+      <div><strong>AC:</strong> ${diff === 'Nightmare' ? 'Base + 50' : 'Base + 80'}</div>
+      <div><strong>Level:</strong> ${diff === 'Nightmare' ? 'Base + 15' : 'Base + 30'}</div>
+      <div><strong>XP:</strong> ${diff === 'Nightmare' ? '2 x (Base + 1000)' : '4 x (Base + 1000)'}</div>
+      <div><strong>Resists:</strong> ${diff === 'Nightmare' ? 'Same as Normal' : 'Hell-specific'}</div>
+    </div>` : '';
+
+  const scaled = filtered.map(m => scaleMonsterStats(m, diff));
+
   return `
-    <p style="margin-bottom:16px;color:var(--text-dim)">Showing ${filtered.length} monsters. Use the search box to filter by name, area, or type.</p>
+    <div class="tab-bar">
+      ${diffTabs.map(t => `<div class="tab ${diffClass[t]} ${diff === t ? 'active' : ''}" onclick="setSubTab('monsters','${t}')">${t === 'Nightmare' ? '🌙' : t === 'Hell' ? '🔥' : '⚔️'} ${t}</div>`).join('')}
+    </div>
+    ${scalingCard}
+    <p style="margin-bottom:16px;color:var(--text-dim)">Showing ${filtered.length} monsters on <strong style="color:${diff === 'Hell' ? 'var(--red-bright)' : diff === 'Nightmare' ? 'var(--fire)' : 'var(--text)'}">${diff}</strong> difficulty. Use the search box to filter by name, area, or type.</p>
     <table class="data-table">
-      <tr><th></th><th>Monster</th><th>Area</th><th>HP</th><th>Damage</th><th>XP</th><th>Resist</th><th>Immune</th><th>Tips</th></tr>
-      ${filtered.map(m => `
+      <tr><th></th><th>Monster</th><th>Area</th><th>Lvl</th><th>HP</th><th>AC</th><th>Damage</th><th>XP</th><th>Resist</th><th>Immune</th><th>Tips</th></tr>
+      ${scaled.map(m => `
         <tr>
           <td class="monster-img-cell">${m.img ? `<img class="monster-img" src="${m.img}" alt="${m.name}" onerror="this.parentElement.innerHTML='<div class=\\'img-placeholder monster\\'>${m.type === 'Undead' ? '💀' : m.type === 'Demon' ? '👹' : '🐾'}</div>'">` : `<div class="img-placeholder monster">${m.type === 'Undead' ? '💀' : m.type === 'Demon' ? '👹' : '🐾'}</div>`}</td>
           <td><strong style="color:var(--text-bright)">${m.name}</strong><br><span style="font-size:12px;color:var(--text-dim)">${m.type}</span></td>
           <td>${m.area}</td>
+          <td>${m.level}</td>
           <td>${m.hp}</td>
+          <td>${m.ac}</td>
           <td>${m.dmg}</td>
           <td>${m.xp}</td>
           <td>${m.resist === 'None' ? '<span style="color:var(--text-dim)">—</span>' : `<span style="color:var(--fire)">${m.resist}</span>`}</td>
@@ -1759,6 +1854,8 @@ function renderItems() {
     <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:24px;padding:16px;background:rgba(0,0,0,0.3);border-radius:8px;border:1px solid var(--border)">
       ${itemGallery}
     </div>
+
+    <div class="tip" style="margin-bottom:20px">Higher difficulties increase gold drops and improve the chance of finding unique and high-quality magic items. Nightmare and Hell are the best source for endgame gear like The Grandfather and Windforce.</div>
 
     <div class="section-header">Item Quality Tiers</div>
     <div class="card-grid">
